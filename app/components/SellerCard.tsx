@@ -26,25 +26,35 @@ export default function SellerCard({ seller }: { seller: Seller }) {
           className="object-cover group-hover:scale-105 transition-transform duration-500"
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
         />
+
+        {/* Top badges */}
         <div className="absolute top-3 left-3 flex gap-2 flex-wrap">
           {seller.community_contributor && (
             <span className="bg-moss text-white text-[10px] font-medium px-2 py-0.5 rounded-full">
               Community Contributor
             </span>
           )}
-          {seller.featured && (
-            <span className="bg-clay text-white text-[10px] font-medium px-2 py-0.5 rounded-full">
-              Featured
+          {seller.local_materials && (
+            <span className="bg-bark/80 text-cream text-[10px] font-medium px-2 py-0.5 rounded-full">
+              🌲 Local Materials
             </span>
           )}
         </div>
-        {seller.delivery_available && (
-          <div className="absolute bottom-3 right-3">
-            <span className="bg-black/50 backdrop-blur-sm text-white text-[10px] px-2 py-0.5 rounded-full">
+
+        {/* Bottom row: availability + delivery */}
+        <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between">
+          <span className={`flex items-center gap-1.5 text-[10px] font-medium px-2 py-0.5 rounded-full backdrop-blur-sm ${
+            seller.is_available_now ? "bg-black/40 text-white" : "bg-black/30 text-white/70"
+          }`}>
+            <span className={`w-1.5 h-1.5 rounded-full ${seller.is_available_now ? "bg-green-400" : "bg-white/40"}`} />
+            {seller.is_available_now ? "Available now" : "Made to order"}
+          </span>
+          {seller.delivery_available && (
+            <span className="bg-black/40 backdrop-blur-sm text-white text-[10px] px-2 py-0.5 rounded-full">
               Delivers {seller.delivery_radius_miles}mi
             </span>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       {/* Content */}
@@ -74,11 +84,7 @@ export default function SellerCard({ seller }: { seller: Seller }) {
         <div className="flex items-center justify-between pt-3 border-t border-wheat">
           <div className="flex gap-1.5 items-center">
             {seller.accepted_payments.slice(0, 4).map((method) => (
-              <span
-                key={method}
-                title={method}
-                className="w-6 h-6 bg-cream rounded-full flex items-center justify-center text-[10px] font-bold text-bark"
-              >
+              <span key={method} title={method} className="w-6 h-6 bg-cream rounded-full flex items-center justify-center text-[10px] font-bold text-bark">
                 {PAYMENT_ICONS[method] ?? method[0]}
               </span>
             ))}

@@ -4,15 +4,16 @@ import Link from "next/link";
 import { getSeller, SELLERS } from "@/lib/seed-data";
 import { AvailabilityStatus } from "@/lib/types";
 import ContactButton from "./ContactButton";
+import DeliveryMapLoader from "@/components/DeliveryMapLoader";
 
 export function generateStaticParams() {
   return SELLERS.map((s) => ({ slug: s.slug }));
 }
 
 const STATUS_LABELS: Record<AvailabilityStatus, { label: string; color: string }> = {
-  available:     { label: "Available Now",   color: "bg-moss/10 text-moss" },
-  seasonal:      { label: "Seasonal",        color: "bg-clay/10 text-clay" },
-  made_to_order: { label: "Made to Order",   color: "bg-wheat text-bark/60" },
+  available:     { label: "Available Now",  color: "bg-moss/10 text-moss" },
+  seasonal:      { label: "Seasonal",       color: "bg-clay/10 text-clay" },
+  made_to_order: { label: "Made to Order",  color: "bg-wheat text-bark/60" },
 };
 
 const PAYMENT_LABELS: Record<string, string> = {
@@ -33,14 +34,8 @@ export default async function SellerPage({
     <div className="min-h-screen bg-mist">
       {/* Cover photo */}
       <div className="relative h-56 md:h-72 lg:h-80 w-full bg-wheat">
-        <Image
-          src={seller.cover_photo_url}
-          alt={seller.name}
-          fill
-          className="object-cover"
-          priority
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-bark/60 to-transparent" />
+        <Image src={seller.cover_photo_url} alt={seller.name} fill className="object-cover" priority />
+        <div className="absolute inset-0 bg-linear-to-t from-bark/60 to-transparent" />
         <Link
           href="/"
           className="absolute top-4 left-4 bg-white/20 backdrop-blur-sm text-white text-sm px-3 py-1.5 rounded-full hover:bg-white/30 transition-colors"
@@ -53,17 +48,10 @@ export default async function SellerPage({
         {/* Profile card */}
         <div className="bg-white rounded-2xl shadow-sm p-6 mb-6">
           <div className="flex flex-col sm:flex-row gap-4">
-            {/* Profile photo */}
             <div className="relative w-20 h-20 rounded-full overflow-hidden border-4 border-white shadow-md shrink-0">
-              <Image
-                src={seller.profile_photo_url}
-                alt={seller.name}
-                fill
-                className="object-cover"
-              />
+              <Image src={seller.profile_photo_url} alt={seller.name} fill className="object-cover" />
             </div>
 
-            {/* Info */}
             <div className="flex-1 min-w-0">
               <div className="flex flex-wrap items-start gap-2 mb-1">
                 <h1 className="text-2xl md:text-3xl text-bark" style={{ fontFamily: "var(--font-serif)" }}>
@@ -74,6 +62,11 @@ export default async function SellerPage({
                     Community Contributor
                   </span>
                 )}
+                {seller.local_materials && (
+                  <span className="bg-bark text-cream text-[10px] font-medium px-2 py-0.5 rounded-full mt-1.5">
+                    🌲 Local Materials
+                  </span>
+                )}
               </div>
               <p className="text-bark/60 text-sm mb-2">{seller.tagline}</p>
               <div className="flex flex-wrap gap-2 items-center">
@@ -81,30 +74,24 @@ export default async function SellerPage({
                   📍 {seller.location_label}
                 </span>
                 {seller.categories.map((cat) => (
-                  <span key={cat} className="text-xs text-moss bg-moss/10 px-2 py-0.5 rounded-full font-medium">
-                    {cat}
-                  </span>
+                  <span key={cat} className="text-xs text-moss bg-moss/10 px-2 py-0.5 rounded-full font-medium">{cat}</span>
                 ))}
-                <span className="flex items-center gap-1 text-xs text-sage font-medium">
-                  <svg className="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  Verified Local Maker
+                <span className={`flex items-center gap-1 text-xs font-medium ${seller.is_available_now ? "text-moss" : "text-bark/40"}`}>
+                  <span className={`w-2 h-2 rounded-full ${seller.is_available_now ? "bg-green-400" : "bg-bark/20"}`} />
+                  {seller.is_available_now ? "Available now" : "Made to order"}
                 </span>
               </div>
             </div>
 
-            {/* Contact */}
             <div className="shrink-0">
-              <ContactButton sellerName={seller.name} contactEmail={seller.contact_email} />
+              <ContactButton sellerName={seller.name} customOrdersOpen={seller.custom_orders_open} />
             </div>
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left col: bio + products */}
+          {/* Left: bio + products */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Bio */}
             <div className="bg-white rounded-2xl p-6">
               <h2 className="text-lg text-bark mb-3" style={{ fontFamily: "var(--font-serif)" }}>
                 About {seller.name}
@@ -112,11 +99,8 @@ export default async function SellerPage({
               <p className="text-bark/70 leading-relaxed text-sm">{seller.bio}</p>
             </div>
 
-            {/* Products */}
             <div className="bg-white rounded-2xl p-6">
-              <h2 className="text-lg text-bark mb-4" style={{ fontFamily: "var(--font-serif)" }}>
-                What I Make
-              </h2>
+              <h2 className="text-lg text-bark mb-4" style={{ fontFamily: "var(--font-serif)" }}>What I Make</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {seller.products.map((product) => {
                   const status = STATUS_LABELS[product.availability_status];
@@ -153,9 +137,8 @@ export default async function SellerPage({
             </div>
           </div>
 
-          {/* Right col: details */}
+          {/* Right: details */}
           <div className="space-y-4">
-            {/* Payment methods */}
             <div className="bg-white rounded-2xl p-5">
               <h3 className="text-sm font-medium text-bark mb-3">Accepted Payments</h3>
               <div className="flex flex-wrap gap-2">
@@ -167,7 +150,6 @@ export default async function SellerPage({
               </div>
             </div>
 
-            {/* Custom orders */}
             <div className="bg-white rounded-2xl p-5">
               <h3 className="text-sm font-medium text-bark mb-2">Custom Orders</h3>
               <div className={`flex items-center gap-2 text-sm ${seller.custom_orders_open ? "text-moss" : "text-bark/40"}`}>
@@ -176,21 +158,30 @@ export default async function SellerPage({
               </div>
             </div>
 
-            {/* Delivery */}
-            <div className="bg-white rounded-2xl p-5">
-              <h3 className="text-sm font-medium text-bark mb-2">Delivery</h3>
-              {seller.delivery_available ? (
-                <p className="text-sm text-bark/70">
-                  Delivers within{" "}
-                  <span className="font-medium text-bark">{seller.delivery_radius_miles} miles</span>{" "}
-                  of {seller.location_label}
-                </p>
-              ) : (
-                <p className="text-sm text-bark/40">Pickup only — no delivery</p>
+            {/* Delivery — map if available, text if not */}
+            <div className="bg-white rounded-2xl overflow-hidden">
+              <div className="p-5 pb-3">
+                <h3 className="text-sm font-medium text-bark mb-1">Delivery</h3>
+                {seller.delivery_available ? (
+                  <p className="text-sm text-bark/70">
+                    Delivers within{" "}
+                    <span className="font-medium text-bark">{seller.delivery_radius_miles} miles</span>{" "}
+                    of {seller.location_label}
+                  </p>
+                ) : (
+                  <p className="text-sm text-bark/40">Pickup only — no delivery</p>
+                )}
+              </div>
+              {seller.delivery_available && (
+                <DeliveryMapLoader
+                  lat={seller.lat}
+                  lng={seller.lng}
+                  radiusMiles={seller.delivery_radius_miles}
+                  label={seller.location_label}
+                />
               )}
             </div>
 
-            {/* Barter */}
             {seller.barter_accepts && (
               <div className="bg-cream rounded-2xl p-5">
                 <h3 className="text-sm font-medium text-bark mb-2">🤝 Open to Barter</h3>

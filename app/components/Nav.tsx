@@ -24,6 +24,7 @@ export default function Nav() {
           <nav className="hidden md:flex items-center gap-6">
             <Link href="/" className="text-wheat hover:text-white text-sm font-medium transition-colors">Browse</Link>
             <Link href="/for-guests" className="text-wheat hover:text-white text-sm font-medium transition-colors">For Guests</Link>
+            <Link href="/barter" className="text-wheat hover:text-white text-sm font-medium transition-colors">Barter</Link>
             <Link href="/apply" className="text-wheat hover:text-white text-sm font-medium transition-colors">Sell Here</Link>
             <Link href="/apply" className="bg-clay hover:bg-clay-lt text-white text-sm font-medium px-4 py-2 rounded-full transition-colors">
               Apply to Sell
@@ -51,6 +52,7 @@ export default function Nav() {
         <div className="md:hidden bg-bark border-t border-moss/30 px-4 py-4 flex flex-col gap-4">
           <Link href="/" className="text-wheat text-base font-medium" onClick={() => setMenuOpen(false)}>Browse</Link>
           <Link href="/for-guests" className="text-wheat text-base font-medium" onClick={() => setMenuOpen(false)}>For Guests</Link>
+          <Link href="/barter" className="text-wheat text-base font-medium" onClick={() => setMenuOpen(false)}>Barter</Link>
           <Link href="/apply" className="text-wheat text-base font-medium" onClick={() => setMenuOpen(false)}>Sell Here</Link>
           <Link href="/apply" className="bg-clay text-white text-sm font-medium px-4 py-2 rounded-full text-center" onClick={() => setMenuOpen(false)}>
             Apply to Sell

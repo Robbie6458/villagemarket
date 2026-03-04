@@ -30,6 +30,8 @@ export interface Seller {
   delivery_available: boolean;
   delivery_radius_miles: number;
   custom_orders_open: boolean;
+  is_available_now: boolean;
+  local_materials: boolean;
   community_contributor: boolean;
   featured: boolean;
   verified: boolean;
