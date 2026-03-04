@@ -1,0 +1,37 @@
+services:
+  # Coming soon landing page — live now
+  - type: web
+    name: village-market-landing
+    runtime: static
+    staticPublishPath: landing
+    buildCommand: ""
+    pullRequestPreviewsEnabled: false
+
+  # Full Next.js app — deploy when ready
+  - type: web
+    name: village-market-app
+    runtime: node
+    rootDir: app
+    buildCommand: npm install && npm run build
+    startCommand: node .next/standalone/server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_SUPABASE_URL
+        sync: false
+      - key: NEXT_PUBLIC_SUPABASE_ANON_KEY
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+        sync: false
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: NEXT_PUBLIC_APP_URL
+        sync: false

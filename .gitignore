@@ -1,0 +1,13 @@
+# Next.js
+app/.next/
+app/node_modules/
+app/.env.local
+app/out/
+
+# Misc
+.DS_Store
+*.pem
+Thumbs.db
+
+# Claude internal
+.claude/

@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Village Market — Real people. Real goods. Right here.</title>
+<link rel="icon" href="assets/favicon.png" type="image/png">
+
+<!-- SEO & social sharing -->
+<meta name="description" content="Village Market is a local-only marketplace for North Idaho makers, growers, and creators. Every seller personally verified. No dropshipping. No algorithms. Join the waitlist.">
+<meta property="og:title" content="Village Market — Real people. Real goods. Right here.">
+<meta property="og:description" content="A local-only marketplace for North Idaho makers, growers, and creators. Every seller personally verified. No dropshipping. No algorithms. No ads. Join the waitlist.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://market.village-collective.com">
+<!-- Add a 1200×630 image for rich social link previews: -->
+<!-- <meta property="og:image" content="https://market.village-collective.com/assets/og-image.jpg"> -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Village Market — Real people. Real goods. Right here.">
+<meta name="twitter:description" content="A local-only marketplace for North Idaho makers, growers, and creators. Join the waitlist.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bark:    #2C2417;
+    --moss:    #3D5A3E;
+    --sage:    #7A9E7E;
+    --cream:   #F5F0E8;
+    --wheat:   #E8D9BC;
+    --clay:    #C4845A;
+    --clay-lt: #D9A07A;
+    --mist:    #F9F6F0;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--mist);
+    color: var(--bark);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* === TEXTURE OVERLAY === */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* === HERO === */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    padding: 0 clamp(1.5rem, 5vw, 4rem);
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* Decorative botanical SVG background */
+  .hero::after {
+    content: '';
+    position: absolute;
+    right: -80px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 520px;
+    height: 520px;
+    background: radial-gradient(ellipse, rgba(122,158,126,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  /* === NAV === */
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2rem 0;
+    position: relative;
+    z-index: 2;
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .nav-logo-img {
+    height: 40px;
+    width: auto;
+    display: block;
+    flex-shrink: 0;
+  }
+
+  .nav-logo-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .nav-logo-eyebrow {
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--sage);
+    font-weight: 500;
+  }
+
+  .nav-logo-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    color: var(--bark);
+    letter-spacing: 0.02em;
+  }
+
+  .footer-logo-img {
+    height: 36px;
+    width: auto;
+    display: block;
+    opacity: 0.75;
+    filter: brightness(0) invert(1);
+  }
+
+  .nav-badge {
+    background: var(--moss);
+    color: #fff;
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.4rem 1rem;
+    border-radius: 2rem;
+    font-weight: 500;
+  }
+
+  /* === HERO CONTENT === */
+  .hero-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3.5rem;
+    align-items: center;
+    padding: 3rem 0;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-left {
+    display: flex;
+    flex-direction: column;
+    max-width: 560px;
+  }
+
+  /* Form card on desktop */
+  .hero-right {
+    background: rgba(255,255,255,0.92);
+    border-radius: 20px;
+    border: 1px solid rgba(44,36,23,0.08);
+    padding: 2.5rem;
+    box-shadow: 0 12px 48px rgba(44,36,23,0.09);
+  }
+
+  .hero-right .signup-form,
+  .hero-right .success-state {
+    max-width: none;
+    animation: none;
+  }
+
+  /* Success state sits inside the card — strip its own card styling */
+  .hero-right .success-state {
+    padding: 0;
+    background: none;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  /* Last item in left column needs no bottom margin */
+  .hero-left .founding-offer {
+    margin-bottom: 0;
+  }
+
+  /* Card header label */
+  .card-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: var(--sage);
+    margin-bottom: 1.25rem;
+  }
+
+  .hero-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.75rem;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .hero-eyebrow-line {
+    width: 2.5rem;
+    height: 1px;
+    background: var(--clay);
+  }
+
+  .hero-eyebrow-text {
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--clay);
+    font-weight: 500;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.8rem, 6vw, 5.2rem);
+    line-height: 1.08;
+    color: var(--bark);
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.8s 0.1s ease both;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--moss);
+  }
+
+  .hero-sub {
+    font-size: clamp(1rem, 2vw, 1.15rem);
+    line-height: 1.7;
+    color: #5a4f3e;
+    font-weight: 300;
+    max-width: 520px;
+    margin-bottom: 2.5rem;
+    animation: fadeUp 0.8s 0.2s ease both;
+  }
+
+  /* === FOUNDING OFFER PILL === */
+  .founding-offer {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: var(--wheat);
+    border: 1px solid rgba(196,132,90,0.3);
+    border-radius: 3rem;
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 2.5rem;
+    animation: fadeUp 0.8s 0.3s ease both;
+    max-width: fit-content;
+  }
+
+  .founding-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--clay);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  .founding-text {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--bark);
+  }
+
+  .founding-text strong {
+    color: var(--clay);
+  }
+
+  /* === FORM === */
+  .signup-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 480px;
+    animation: fadeUp 0.8s 0.4s ease both;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  label {
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: var(--sage);
+  }
+
+  input, select, textarea {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    padding: 0.75rem 1rem;
+    background: #fff;
+    border: 1.5px solid rgba(44,36,23,0.12);
+    border-radius: 8px;
+    color: var(--bark);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+    width: 100%;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--moss);
+    box-shadow: 0 0 0 3px rgba(61,90,62,0.1);
+  }
+
+  select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237A9E7E' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    padding-right: 2.5rem;
+  }
+
+  textarea { resize: vertical; min-height: 80px; }
+
+  .checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.9rem;
+    color: var(--bark);
+    cursor: pointer;
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: 400;
+  }
+
+  .checkbox-label input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    padding: 0;
+    accent-color: var(--moss);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .submit-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    background: var(--moss);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 1rem 2rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    letter-spacing: 0.02em;
+  }
+
+  .submit-btn:hover {
+    background: #2d4430;
+    transform: translateY(-1px);
+  }
+
+  .submit-btn:active { transform: translateY(0); }
+
+  .form-note {
+    font-size: 0.78rem;
+    color: #9a8f7e;
+    line-height: 1.5;
+  }
+
+  /* === SUCCESS STATE === */
+  .success-state {
+    display: none;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 2rem;
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid rgba(61,90,62,0.2);
+    max-width: 480px;
+  }
+
+  .success-state.visible { display: flex; }
+
+  .success-icon {
+    width: 48px;
+    height: 48px;
+    background: var(--moss);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 1.4rem;
+  }
+
+  .success-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    color: var(--bark);
+  }
+
+  .success-body {
+    font-size: 0.95rem;
+    color: #5a4f3e;
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  /* === PILLARS === */
+  .pillars {
+    padding: 5rem 0;
+    background: var(--bark);
+    position: relative;
+    z-index: 1;
+  }
+
+  .pillars-eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--sage);
+    font-weight: 500;
+    margin-bottom: 3rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .pillars-eyebrow::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255,255,255,0.1);
+    max-width: 200px;
+  }
+
+  .pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 2.5rem;
+  }
+
+  .pillar {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .pillar.visible { opacity: 1; transform: translateY(0); }
+
+  .pillar-icon {
+    font-size: 1.8rem;
+    line-height: 1;
+  }
+
+  .pillar-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--wheat);
+  }
+
+  .pillar-body {
+    font-size: 0.88rem;
+    color: rgba(245,240,232,0.6);
+    line-height: 1.65;
+    font-weight: 300;
+  }
+
+  /* === CATEGORIES === */
+  .categories {
+    padding: 5rem 0;
+    background: var(--wheat);
+  }
+
+  /* Inner content wrapper — constrains content width while keeping full-bleed bg */
+  .section-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 clamp(1.5rem, 5vw, 4rem);
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    color: var(--bark);
+    margin-bottom: 2.5rem;
+    text-align: center;
+  }
+
+  .category-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+  }
+
+  .chip {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #fff;
+    border: 1px solid rgba(44,36,23,0.1);
+    border-radius: 3rem;
+    padding: 0.6rem 1.1rem;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--bark);
+    transition: background 0.2s, border-color 0.2s;
+    cursor: default;
+  }
+
+  .chip:hover {
+    background: var(--moss);
+    color: #fff;
+    border-color: var(--moss);
+  }
+
+  /* === FOOTER === */
+  footer {
+    background: var(--bark);
+    padding: 2rem clamp(1.5rem, 5vw, 4rem);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-text {
+    font-size: 0.8rem;
+    color: rgba(245,240,232,0.4);
+  }
+
+  .footer-vc {
+    font-size: 0.8rem;
+    color: rgba(245,240,232,0.5);
+  }
+
+  .footer-vc a {
+    color: var(--sage);
+    text-decoration: none;
+  }
+
+  /* === SCROLL INDICATOR === */
+  .scroll-indicator {
+    padding: 1.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0.4;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    position: relative;
+    z-index: 2;
+    animation: fadeUp 1s 0.8s ease both;
+    color: var(--bark);
+    text-decoration: none;
+    width: fit-content;
+    transition: opacity 0.2s;
+  }
+
+  .scroll-indicator:hover { opacity: 0.75; }
+
+  /* === ANIMATIONS === */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50%       { transform: scale(1.4); opacity: 0.6; }
+  }
+
+  /* === DIVIDER === */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0 clamp(1.5rem, 5vw, 4rem);
+    background: var(--cream);
+    height: 60px;
+  }
+
+  .divider-line { flex: 1; height: 1px; background: var(--wheat); }
+  .divider-mark {
+    font-size: 1.2rem;
+    color: var(--clay);
+  }
+
+  /* === SPOTS BADGE === */
+  .spots-badge {
+    background: var(--clay);
+    color: #fff;
+    font-size: 0.68rem;
+    font-weight: 600;
+    padding: 0.2rem 0.6rem;
+    border-radius: 1rem;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* === HERO ATTRIBUTION === */
+  .hero-attribution {
+    font-size: 0.82rem;
+    color: #7a6f5e;
+    line-height: 1.65;
+    margin-bottom: 2rem;
+    font-weight: 300;
+  }
+
+  .hero-attribution a {
+    color: var(--moss);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* === CATEGORIES TAGLINE === */
+  .categories-tagline {
+    font-size: 1rem;
+    color: #6b5f4f;
+    line-height: 1.75;
+    max-width: 560px;
+    margin: -0.5rem auto 2.5rem;
+    text-align: center;
+    font-style: italic;
+    font-weight: 300;
+  }
+
+  /* === SHARE === */
+  .share-row {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(44,36,23,0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .share-prompt {
+    font-size: 0.88rem;
+    color: #5a4f3e;
+  }
+
+  .share-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: none;
+    border: 1.5px solid var(--moss);
+    color: var(--moss);
+    border-radius: 8px;
+    padding: 0.6rem 1.2rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    width: fit-content;
+  }
+
+  .share-btn:hover { background: var(--moss); color: #fff; }
+
+  .form-share-nudge {
+    font-size: 0.78rem;
+    color: #9a8f7e;
+    line-height: 1.5;
+  }
+
+  .text-share-btn {
+    background: none;
+    border: none;
+    color: var(--moss);
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 500;
+    padding: 0;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  /* === RESPONSIVE === */
+  @media (max-width: 900px) {
+    /* Stack hero to single column on tablets and phones */
+    .hero-content {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+
+    /* Strip the desktop card style — form sits flush on mobile */
+    .hero-right {
+      background: none;
+      border: none;
+      padding: 0;
+      box-shadow: none;
+      border-radius: 0;
+    }
+
+    /* Re-enable animations for mobile stacked layout */
+    .hero-right .signup-form,
+    .hero-right .success-state {
+      animation: revert;
+    }
+
+    /* Hide the decorative gradient circle that overflows on mobile */
+    .hero::after { display: none; }
+
+    /* Ensure hero doesn't trap content below fold on short screens */
+    .hero { min-height: unset; padding-bottom: 3rem; }
+
+    /* Pill wraps gracefully on narrow screens */
+    .founding-offer { flex-wrap: wrap; }
+
+    .hero-left { max-width: none; }
+    .card-label { display: none; }
+  }
+
+  @media (max-width: 600px) {
+    .form-row { grid-template-columns: 1fr; }
+    nav { flex-direction: column; gap: 1rem; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ========== HERO ========== -->
+<section class="hero">
+  <nav>
+    <div class="nav-logo">
+      <img src="assets/village-collective-logo.webp" alt="Village Collective" class="nav-logo-img">
+      <div class="nav-logo-text">
+        <span class="nav-logo-eyebrow">A Village Collective Project</span>
+        <span class="nav-logo-name">Village Market</span>
+      </div>
+    </div>
+    <span class="nav-badge">Coming Soon</span>
+  </nav>
+
+  <div class="hero-content">
+    <!-- LEFT: headline + pitch -->
+    <div class="hero-left">
+      <div class="hero-eyebrow">
+        <span class="hero-eyebrow-line"></span>
+        <span class="hero-eyebrow-text">North Idaho · Coeur d'Alene</span>
+      </div>
+
+      <h1>Real people.<br><em>Real goods.</em><br>Right here.</h1>
+
+      <p class="hero-sub">
+        Village Market is a local-only marketplace for North Idaho makers, growers, and creators.
+        Every seller is personally verified. No dropshipping. No algorithms. No ads.
+        Just neighbors selling to neighbors.
+      </p>
+
+      <p class="hero-attribution">
+        Built by <a href="https://village-collective.com" target="_blank" rel="noopener">Village Collective</a> — North Idaho's short-term rental company. We've hosted thousands of guests who all ask the same question: <em>where do I find the local stuff?</em> This is our answer.
+      </p>
+
+      <div class="founding-offer">
+        <span class="founding-dot"></span>
+        <span class="founding-text"><strong>Founding Maker Offer</strong> — waived $50 onboarding fee + permanent Founding Maker badge</span>
+        <span class="spots-badge"><span id="spotsCount">10</span> spots left</span>
+      </div>
+    </div>
+
+    <!-- RIGHT: signup form card -->
+    <div class="hero-right">
+      <p class="card-label">Reserve your spot</p>
+
+    <!-- SIGNUP FORM -->
+    <form class="signup-form" id="waitlistForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="fname">First Name</label>
+          <input type="text" id="fname" placeholder="Sarah" required>
+        </div>
+        <div class="form-group">
+          <label for="lname">Last Name</label>
+          <input type="text" id="lname" placeholder="Miller" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="you@email.com" required>
+      </div>
+
+      <div class="form-group">
+        <label for="area">Your Area</label>
+        <select id="area" required>
+          <option value="" disabled selected>Where are you based?</option>
+          <option>Coeur d'Alene</option>
+          <option>Post Falls</option>
+          <option>Hayden</option>
+          <option>Rathdrum</option>
+          <option>Sandpoint</option>
+          <option>Other North Idaho</option>
+          <option>Just visiting — I'm a guest!</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>I am a...</label>
+        <div class="checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" value="maker"> Local maker / creator / grower looking to sell
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" value="buyer"> Local resident or visitor wanting to buy local
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" value="both"> Both!
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="craft">What do you make or grow? <span style="opacity:0.5">(makers only, optional)</span></label>
+        <input type="text" id="craft" placeholder="e.g. woodwork, honey, candles, pottery...">
+      </div>
+
+      <button type="submit" class="submit-btn">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8h12M9 4l5 4-5 4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Join the Waitlist
+      </button>
+
+      <p class="form-note">
+        We'll reach out personally — no spam, ever. Makers who apply early will be first to get their storefronts set up.
+      </p>
+      <p class="form-share-nudge">Know a local maker? <button class="text-share-btn" id="formShareBtn">Forward this page →</button></p>
+    </form>
+
+    <!-- SUCCESS STATE -->
+    <div class="success-state" id="successState">
+      <div class="success-icon">🌲</div>
+      <div class="success-title">You're on the list.</div>
+      <div class="success-body">
+        We'll be in touch soon — personally. If you're one of our first 10 founding makers, we'll waive your onboarding fee and help you get your storefront set up before launch.
+      </div>
+      <div class="share-row">
+        <p class="share-prompt">Know a local maker who should be here?</p>
+        <button class="share-btn" id="shareBtn">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 1h4v4M13 1L7 7M6 3H2a1 1 0 00-1 1v8a1 1 0 001 1h8a1 1 0 001-1V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Share Village Market
+        </button>
+      </div>
+    </div>
+
+    </div><!-- /hero-right -->
+  </div><!-- /hero-content -->
+
+  <!-- scroll indicator -->
+  <a href="#pillars" class="scroll-indicator">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v10M3 9l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    What's coming
+  </a>
+</section>
+
+<!-- ========== PILLARS ========== -->
+<section class="pillars" id="pillars">
+  <div class="section-inner">
+  <div class="pillars-eyebrow">Why Village Market is different</div>
+  <div class="pillars-grid">
+    <div class="pillar">
+      <div class="pillar-icon">🔒</div>
+      <div class="pillar-title">Geo-fenced & local only</div>
+      <div class="pillar-body">You have to be physically here to interact. If you're in North Idaho, you're in. This market is for neighbors — not the internet.</div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon">✅</div>
+      <div class="pillar-title">Every seller personally verified</div>
+      <div class="pillar-body">No automated signups. We know every maker on the platform. Zero dropshippers, zero print-on-demand, zero nonsense.</div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon">🤝</div>
+      <div class="pillar-title">Barter welcome</div>
+      <div class="pillar-body">Cash, Venmo, crypto — or trade. Sellers can list what they'll accept as barter. A knife for a jar of honey. That's a transaction we're proud of.</div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon">📣</div>
+      <div class="pillar-title">No algorithms. No ads.</div>
+      <div class="pillar-body">Your storefront, your story. We never sell ads or bury you in a feed. Community contributors get a boost — that's it.</div>
+    </div>
+  </div>
+  </div><!-- /section-inner -->
+</section>
+
+<!-- ========== DIVIDER ========== -->
+<div class="divider">
+  <div class="divider-line"></div>
+  <div class="divider-mark">🌾</div>
+  <div class="divider-line"></div>
+</div>
+
+<!-- ========== CATEGORIES ========== -->
+<section class="categories">
+  <div class="section-inner">
+    <h2 class="section-title">What you'll find here</h2>
+    <p class="categories-tagline">The honey you didn't know you needed. A cutting board a neighbor spent a week making. Eggs from a farm three miles away. A knife that took a month to forge.</p>
+    <div class="category-chips">
+      <div class="chip">🌾 Food &amp; Farm</div>
+      <div class="chip">🪵 Wood &amp; Craft</div>
+      <div class="chip">🕯️ Apothecary &amp; Wellness</div>
+      <div class="chip">🎨 Art &amp; Photography</div>
+      <div class="chip">🧵 Fiber &amp; Textile</div>
+      <div class="chip">🔨 Metal &amp; Forge</div>
+      <div class="chip">🌱 Garden &amp; Plant</div>
+      <div class="chip">🛠️ Services &amp; Skills</div>
+      <div class="chip">🍯 Honey &amp; Bee Products</div>
+      <div class="chip">🧺 Handmade Gifts</div>
+      <div class="chip">🥚 Farm Fresh Eggs</div>
+      <div class="chip">🌿 Herbs &amp; Tinctures</div>
+    </div>
+  </div><!-- /section-inner -->
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer>
+  <a href="https://village-collective.com" target="_blank" rel="noopener">
+    <img src="assets/village-collective-logo.webp" alt="Village Collective" class="footer-logo-img">
+  </a>
+  <span class="footer-text">© 2026 Village Market · Coeur d'Alene, Idaho</span>
+</footer>
+
+<script>
+  // MailerLite credentials — fill these in before going live
+  const ML_API_KEY  = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI0IiwianRpIjoiMTZhZDdlZThhN2Y4ZDhiNDM3ZjVkMDU1MmE4YWEzN2RhZjNlYzBhZTE4ODVlNTVkNzRjNjkxZmYzMDVkZDcyNDhmODI0N2QyYTNhYTQ2ZjEiLCJpYXQiOjE3NzI1MTA4MDguOTA3NTIyLCJuYmYiOjE3NzI1MTA4MDguOTA3NTI0LCJleHAiOjQ5MjgxODQ0MDguOTAzMTcyLCJzdWIiOiI3ODQ4NTciLCJzY29wZXMiOltdfQ.CM75A-NHKS0BCXUm_od00ACaJvsdEEDjmcWvxQoMo-UNiteYW04JOD6iHrtadpLP72OlqFa49lyB3uI56-bkJ4K9Vd-N96vk5r-yeNz4baPi1tOeRjr3v7FFFRi1-ANuC98QQnq9TzypBtcFUF-STJDDp9YzggUHHnu9TjxCeSdt_ID33-DqgxSYax-geE1BQh3STyiomzye63XgRk4jdQJ13oaQ9_d5DAggGZ9f2ctPiLdC3Kbzjmof3BVbPOjDontHxI8d19xS-t8bPT6aHBdv3TCSWMhP9LbDIAPU4zZrHK7Z_77ixgm-RRw_bkUEOxxU1tXjv1e0SnIkk48J5DS3etMMQEezIHUgGQsI7YfUCSvmjuGFfP7F0QrtdKs0Cvxtl55RZzBMvhM4rKxCPq-aR0d6RmyWtU9GuyhD6rv-wZDO7rN8MqoP7EWDaNZwbkkqCxBsmGxB28vf9BlqzZBoyMB0HnvpXbXc1lrIMVEXXOs8wJAPnlUxGP8g4G0Vx7QxA5p7YAdLeMQUCVmYylW0560W9fCoWnoILkPYfB7Mw57TqcwuCgGyf4wmKexEXpAzxvEOoMCSM1Oaa93wwlCNVUwn_wsCMT63sNPNJPmldcCIeZFOWRLRaqMT4NLAbb-dqeH31MaJOTGwigXA4QpiVKUNkY0-ouUHeGDcjqE';
+  const ML_GROUP_ID = '180890377136375207';
+
+  document.getElementById('waitlistForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const btn = this.querySelector('.submit-btn');
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+
+    // Collect form values
+    const fname = document.getElementById('fname').value.trim();
+    const lname = document.getElementById('lname').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const area  = document.getElementById('area').value;
+    const craft = document.getElementById('craft').value.trim();
+
+    const roles = [...document.querySelectorAll('.checkbox-group input[type="checkbox"]:checked')]
+      .map(cb => cb.value).join(', ');
+
+    const payload = {
+      email,
+      fields: {
+        name:      fname,
+        last_name: lname,
+        location:  area,
+        role:      roles || '',
+        craft:     craft,
+      },
+      groups: [ML_GROUP_ID],
+    };
+
+    try {
+      const res = await fetch('https://connect.mailerlite.com/api/subscribers', {
+        method:  'POST',
+        headers: {
+          'Content-Type':  'application/json',
+          'Accept':        'application/json',
+          'Authorization': `Bearer ${ML_API_KEY}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || `HTTP ${res.status}`);
+      }
+
+      // Success — show the confirmation panel
+      document.getElementById('waitlistForm').style.display = 'none';
+      document.getElementById('successState').classList.add('visible');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    } catch (err) {
+      console.error('MailerLite error:', err);
+      btn.disabled = false;
+      btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8h12M9 4l5 4-5 4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Join the Waitlist`;
+      alert('Something went wrong — please try again or email us directly.');
+    }
+  });
+
+  // Conditional craft field — only show when maker/both is checked
+  const makerCb = document.querySelector('input[value="maker"]');
+  const bothCb  = document.querySelector('input[value="both"]');
+  const craftGroup = document.getElementById('craft').closest('.form-group');
+
+  function updateCraftVisibility() {
+    craftGroup.style.display = (makerCb.checked || bothCb.checked) ? 'flex' : 'none';
+  }
+  craftGroup.style.display = 'none'; // hidden until maker role is selected
+  makerCb.addEventListener('change', updateCraftVisibility);
+  bothCb.addEventListener('change',  updateCraftVisibility);
+
+  // Share functionality (Web Share API → clipboard fallback)
+  async function shareVillageMarket(btn) {
+    const shareData = {
+      title: 'Village Market — Real people. Real goods. Right here.',
+      text:  'A new local-only marketplace for North Idaho makers is launching. Join the waitlist.',
+      url:   window.location.href,
+    };
+    if (navigator.share) {
+      try { await navigator.share(shareData); } catch (_) {}
+    } else {
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        const original = btn.innerHTML;
+        btn.textContent = 'Link copied!';
+        setTimeout(() => { btn.innerHTML = original; }, 2500);
+      } catch (_) {
+        prompt('Copy this link:', window.location.href);
+      }
+    }
+  }
+
+  document.getElementById('shareBtn').addEventListener('click', function() {
+    shareVillageMarket(this);
+  });
+  document.getElementById('formShareBtn').addEventListener('click', function() {
+    shareVillageMarket(this);
+  });
+
+  // Scroll-triggered pillar animations
+  const pillars = document.querySelectorAll('.pillar');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 120);
+      }
+    });
+  }, { threshold: 0.1 });
+  pillars.forEach(p => observer.observe(p));
+</script>
+</body>
+</html>
