@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import SellerCard from "@/components/SellerCard";
 import CategoryFilter from "@/components/CategoryFilter";
 import { GeoBanner } from "@/components/GeoGate";
+import HeroSignupForm from "@/components/HeroSignupForm";
 import { SELLERS, FEATURED_SELLERS } from "@/lib/seed-data";
 
 type SortOption = "default" | "available" | "delivery" | "contributors" | "az";
@@ -76,29 +77,37 @@ export default function HomePage() {
       {/* Hero */}
       <section className="bg-cream border-b border-wheat">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
-          <div className="max-w-2xl">
-            <p className="text-sage text-sm font-medium tracking-widest uppercase mb-3">
-              Coeur d&apos;Alene · North Idaho
-            </p>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl text-bark leading-tight mb-4" style={{ fontFamily: "var(--font-serif)" }}>
-              Real people.
-              <br /><em>Real goods.</em>
-              <br />Right here.
-            </h1>
-            <p className="text-bark/60 text-lg mb-8 leading-relaxed">
-              A local-only marketplace for North Idaho makers, growers, and creators. Every seller personally verified. No dropshipping, no algorithms.
-            </p>
-            <div className="relative max-w-lg">
-              <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-bark/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-              <input
-                type="text"
-                placeholder="Search makers, goods, or neighborhoods…"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-12 pr-4 py-3.5 bg-white border border-wheat rounded-2xl text-bark placeholder-bark/35 focus:outline-none focus:border-moss focus:ring-1 focus:ring-moss text-sm shadow-sm"
-              />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            {/* Left: headline + search */}
+            <div>
+              <p className="text-sage text-sm font-medium tracking-widest uppercase mb-3">
+                Coeur d&apos;Alene · North Idaho
+              </p>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl text-bark leading-tight mb-4" style={{ fontFamily: "var(--font-serif)" }}>
+                Real people.
+                <br /><em>Real goods.</em>
+                <br />Right here.
+              </h1>
+              <p className="text-bark/60 text-lg mb-8 leading-relaxed">
+                A local-only marketplace for North Idaho makers, growers, and creators. Every seller personally verified. No dropshipping, no algorithms.
+              </p>
+              <div className="relative max-w-lg">
+                <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-bark/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <input
+                  type="text"
+                  placeholder="Search makers, goods, or neighborhoods…"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="w-full pl-12 pr-4 py-3.5 bg-white border border-wheat rounded-2xl text-bark placeholder-bark/35 focus:outline-none focus:border-moss focus:ring-1 focus:ring-moss text-sm shadow-sm"
+                />
+              </div>
+            </div>
+
+            {/* Right: signup card */}
+            <div className="lg:max-w-sm lg:ml-auto w-full">
+              <HeroSignupForm />
             </div>
           </div>
         </div>
