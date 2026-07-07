@@ -1,12 +1,29 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useGeo } from "@/lib/geo-context";
+import { createClient } from "@/lib/supabase/client";
 
 export default function Nav() {
   const [menuOpen, setMenuOpen] = useState(false);
   const { isLocal, status } = useGeo();
+  const [sellerLoggedIn, setSellerLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getSession().then(({ data }) => {
+      setSellerLoggedIn(!!data.session);
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSellerLoggedIn(!!session);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const sellerLink = sellerLoggedIn
+    ? { href: "/dashboard", label: "My Dashboard" }
+    : { href: "/seller/login", label: "Seller Sign In" };
 
   return (
     <header className="sticky top-0 z-50 bg-bark shadow-md">
@@ -25,7 +42,9 @@ export default function Nav() {
             <Link href="/" className="text-wheat hover:text-white text-sm font-medium transition-colors">Browse</Link>
             <Link href="/for-guests" className="text-wheat hover:text-white text-sm font-medium transition-colors">For Guests</Link>
             <Link href="/barter" className="text-wheat hover:text-white text-sm font-medium transition-colors">Barter</Link>
-            <Link href="/apply" className="text-wheat hover:text-white text-sm font-medium transition-colors">Sell Here</Link>
+            <Link href={sellerLink.href} className="text-wheat/60 hover:text-white text-sm transition-colors">
+              {sellerLink.label}
+            </Link>
             <Link href="/apply" className="bg-clay hover:bg-clay-lt text-white text-sm font-medium px-4 py-2 rounded-full transition-colors">
               Apply to Sell
             </Link>
@@ -53,7 +72,9 @@ export default function Nav() {
           <Link href="/" className="text-wheat text-base font-medium" onClick={() => setMenuOpen(false)}>Browse</Link>
           <Link href="/for-guests" className="text-wheat text-base font-medium" onClick={() => setMenuOpen(false)}>For Guests</Link>
           <Link href="/barter" className="text-wheat text-base font-medium" onClick={() => setMenuOpen(false)}>Barter</Link>
-          <Link href="/apply" className="text-wheat text-base font-medium" onClick={() => setMenuOpen(false)}>Sell Here</Link>
+          <Link href={sellerLink.href} className="text-wheat/60 text-base" onClick={() => setMenuOpen(false)}>
+            {sellerLink.label}
+          </Link>
           <Link href="/apply" className="bg-clay text-white text-sm font-medium px-4 py-2 rounded-full text-center" onClick={() => setMenuOpen(false)}>
             Apply to Sell
           </Link>

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { CATEGORIES, PAYMENT_METHODS, NEIGHBORHOODS } from "@/lib/types";
+import { createClient } from "@/lib/supabase/client";
 
 type FormStatus = "idle" | "submitting" | "success" | "error";
 
@@ -24,9 +25,57 @@ export default function ApplyPage() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setStatus("submitting");
-    // TODO: wire to Supabase — insert into seller_applications table
-    await new Promise((r) => setTimeout(r, 800));
+
+    const data = new FormData(e.currentTarget);
+    const fname = data.get("fname") as string;
+    const lname = data.get("lname") as string;
+
+    const supabase = createClient();
+    const { error } = await supabase.from("seller_applications").insert({
+      name: `${fname} ${lname}`.trim(),
+      email: data.get("email") as string,
+      phone: (data.get("phone") as string) || "",
+      location: data.get("location") as string,
+      categories: selectedCategories,
+      description: data.get("description") as string,
+      experience: (data.get("experience") as string) || "",
+      payment_methods: selectedPayments,
+      delivery_available: deliveryAvailable,
+      delivery_radius_miles: deliveryAvailable
+        ? parseInt(data.get("delivery_radius") as string) || 0
+        : 0,
+      social_links: (data.get("social_links") as string) || null,
+      referral_source: (data.get("referral_source") as string) || null,
+    });
+
+    if (error) {
+      console.error("Application submission error:", error);
+      setStatus("error");
+      return;
+    }
+
     setStatus("success");
+  }
+
+  if (status === "error") {
+    return (
+      <div className="min-h-screen bg-mist flex items-center justify-center px-4">
+        <div className="max-w-md text-center">
+          <h1 className="text-2xl text-bark mb-3" style={{ fontFamily: "var(--font-serif)" }}>
+            Something went wrong
+          </h1>
+          <p className="text-bark/60 leading-relaxed mb-6">
+            We couldn&apos;t submit your application. Please try again or email us directly.
+          </p>
+          <button
+            onClick={() => setStatus("idle")}
+            className="text-moss font-medium hover:underline text-sm"
+          >
+            ← Try again
+          </button>
+        </div>
+      </div>
+    );
   }
 
   if (status === "success") {
