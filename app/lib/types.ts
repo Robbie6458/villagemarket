@@ -33,6 +33,8 @@ export interface Seller {
   is_available_now: boolean;
   local_materials: boolean;
   community_contributor: boolean;
+  founding_maker: boolean;
+  monthly_supporter: boolean;
   featured: boolean;
   verified: boolean;
   contact_email?: string;

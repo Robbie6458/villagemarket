@@ -1,9 +1,17 @@
 import Link from "next/link";
-import { SELLERS } from "@/lib/seed-data";
+import { createClient } from "@/lib/supabase/server";
 
-const BARTER_SELLERS = SELLERS.filter((s) => s.barter_accepts);
+export default async function BarterPage() {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("sellers")
+    .select("id, slug, name, tagline, location_label, barter_accepts")
+    .eq("is_active", true)
+    .neq("barter_accepts", "")
+    .order("name");
 
-export default function BarterPage() {
+  const barterSellers = data ?? [];
+
   return (
     <div className="min-h-screen bg-mist">
       {/* Hero */}
@@ -49,15 +57,15 @@ export default function BarterPage() {
           <h2 className="text-2xl text-bark mb-1" style={{ fontFamily: "var(--font-serif)" }}>
             Open to Barter
           </h2>
-          <p className="text-bark/55 text-sm mb-6">{BARTER_SELLERS.length} makers currently open to trade</p>
+          <p className="text-bark/55 text-sm mb-6">{barterSellers.length} maker{barterSellers.length !== 1 ? "s" : ""} currently open to trade</p>
 
-          {BARTER_SELLERS.length > 0 ? (
+          {barterSellers.length > 0 ? (
             <div className="space-y-3">
-              {BARTER_SELLERS.map((seller) => (
+              {barterSellers.map((seller) => (
                 <Link
                   key={seller.id}
                   href={`/sellers/${seller.slug}`}
-                  className="group flex items-start gap-4 bg-white rounded-2xl p-5 hover:shadow-md transition-all hover:-translate-y-0.5 block"
+                  className="group flex items-start gap-4 bg-white rounded-2xl p-5 hover:shadow-md transition-all hover:-translate-y-0.5"
                 >
                   <div className="w-10 h-10 bg-wheat rounded-full flex items-center justify-center shrink-0 text-lg">
                     🤝
@@ -101,9 +109,12 @@ export default function BarterPage() {
             If you&apos;re a verified Village Market seller, you can flag your profile as open to barter
             and list what you&apos;re looking to trade for. It shows up here and on your storefront.
           </p>
-          <p className="text-white/50 text-xs">
-            Seller dashboard coming soon — you&apos;ll be able to manage this and all your settings in one place.
-          </p>
+          <Link
+            href="/dashboard"
+            className="inline-block bg-white text-moss text-sm font-medium px-5 py-2.5 rounded-full hover:bg-cream transition-colors"
+          >
+            Go to your dashboard →
+          </Link>
         </section>
 
         {/* Coming features teaser */}

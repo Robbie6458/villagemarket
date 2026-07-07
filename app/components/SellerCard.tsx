@@ -28,7 +28,17 @@ export default function SellerCard({ seller }: { seller: Seller }) {
         />
 
         {/* Top badges */}
-        <div className="absolute top-3 left-3 flex gap-2 flex-wrap">
+        <div className="absolute top-3 left-3 flex gap-1.5 flex-wrap">
+          {seller.founding_maker && (
+            <span className="bg-clay text-white text-[10px] font-medium px-2 py-0.5 rounded-full">
+              🌱 Founding Maker
+            </span>
+          )}
+          {seller.monthly_supporter && (
+            <span className="bg-sage text-white text-[10px] font-medium px-2 py-0.5 rounded-full">
+              ♡ Supporter
+            </span>
+          )}
           {seller.community_contributor && (
             <span className="bg-moss text-white text-[10px] font-medium px-2 py-0.5 rounded-full">
               Community Contributor

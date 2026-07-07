@@ -2,18 +2,21 @@
 
 import { useState } from "react";
 import { useGeo } from "@/lib/geo-context";
+import { sendContactEmail } from "./actions";
 
 interface ContactButtonProps {
+  slug: string;
   sellerName: string;
   customOrdersOpen: boolean;
 }
 
-type FormStatus = "idle" | "submitting" | "sent";
+type FormStatus = "idle" | "submitting" | "sent" | "error";
 
-export default function ContactButton({ sellerName, customOrdersOpen }: ContactButtonProps) {
+export default function ContactButton({ slug, sellerName, customOrdersOpen }: ContactButtonProps) {
   const { isLocal, status } = useGeo();
   const [open, setOpen] = useState(false);
   const [formStatus, setFormStatus] = useState<FormStatus>("idle");
+  const [errorMsg, setErrorMsg] = useState("");
 
   if (status === "checking") return null;
 
@@ -36,9 +39,32 @@ export default function ContactButton({ sellerName, customOrdersOpen }: ContactB
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setFormStatus("submitting");
-    // TODO: send via Resend once wired
-    await new Promise((r) => setTimeout(r, 700));
-    setFormStatus("sent");
+    setErrorMsg("");
+
+    const form = e.currentTarget;
+    const fd = new FormData(form);
+
+    try {
+      await sendContactEmail(slug, {
+        fromName: fd.get("name") as string,
+        fromEmail: fd.get("email") as string,
+        isCustomOrder: customOrdersOpen,
+        message: fd.get("message") as string | undefined,
+        request: fd.get("request") as string | undefined,
+        timeline: fd.get("timeline") as string | undefined,
+        budget: fd.get("budget") as string | undefined,
+      });
+      setFormStatus("sent");
+    } catch (err) {
+      setErrorMsg((err as Error).message || "Something went wrong. Please try again.");
+      setFormStatus("error");
+    }
+  }
+
+  function handleClose() {
+    setOpen(false);
+    setFormStatus("idle");
+    setErrorMsg("");
   }
 
   return (
@@ -53,28 +79,44 @@ export default function ContactButton({ sellerName, customOrdersOpen }: ContactB
       {/* Modal */}
       {open && (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4">
-          {/* Backdrop */}
           <div
             className="absolute inset-0 bg-bark/50 backdrop-blur-sm"
-            onClick={() => { setOpen(false); setFormStatus("idle"); }}
+            onClick={handleClose}
           />
 
-          {/* Panel */}
           <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-md p-6 z-10">
             {formStatus === "sent" ? (
-              <div className="text-center py-4">
+              <div className="text-center py-2">
                 <div className="w-12 h-12 bg-moss/10 rounded-full flex items-center justify-center mx-auto mb-4">
                   <svg className="w-6 h-6 text-moss" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
                 </div>
                 <h3 className="text-lg text-bark mb-2" style={{ fontFamily: "var(--font-serif)" }}>Request sent</h3>
-                <p className="text-bark/60 text-sm mb-4">
+                <p className="text-bark/60 text-sm mb-5">
                   {sellerName} will receive your request and follow up directly.
                 </p>
+
+                {process.env.NEXT_PUBLIC_STRIPE_TIP_LINK && (
+                  <div className="bg-cream rounded-xl p-4 mb-4 text-left">
+                    <p className="text-bark text-xs font-medium mb-1">If this connection leads somewhere good —</p>
+                    <p className="text-bark/60 text-xs leading-relaxed mb-3">
+                      A small tip helps keep Village Market free, local, and ad-free.
+                    </p>
+                    <a
+                      href={process.env.NEXT_PUBLIC_STRIPE_TIP_LINK}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block bg-bark hover:bg-moss text-cream text-xs font-medium px-4 py-2 rounded-full transition-colors"
+                    >
+                      Tip the Village ♡
+                    </a>
+                  </div>
+                )}
+
                 <button
-                  onClick={() => { setOpen(false); setFormStatus("idle"); }}
-                  className="text-sm text-moss font-medium hover:underline"
+                  onClick={handleClose}
+                  className="text-sm text-bark/40 hover:text-bark transition-colors"
                 >
                   Close
                 </button>
@@ -88,7 +130,7 @@ export default function ContactButton({ sellerName, customOrdersOpen }: ContactB
                     </h3>
                     <p className="text-bark/50 text-sm mt-0.5">to {sellerName}</p>
                   </div>
-                  <button onClick={() => setOpen(false)} className="text-bark/30 hover:text-bark text-xl leading-none mt-0.5">×</button>
+                  <button onClick={handleClose} className="text-bark/30 hover:text-bark text-xl leading-none mt-0.5">×</button>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -116,20 +158,20 @@ export default function ContactButton({ sellerName, customOrdersOpen }: ContactB
                           <label className="block text-sm font-medium text-bark mb-1.5">Timeline</label>
                           <select name="timeline" className="w-full px-3 py-2 border border-wheat rounded-xl text-bark bg-white focus:outline-none focus:border-moss text-sm">
                             <option value="">No preference</option>
-                            <option value="asap">As soon as possible</option>
-                            <option value="2weeks">Within 2 weeks</option>
-                            <option value="1month">Within a month</option>
-                            <option value="flexible">Flexible</option>
+                            <option value="As soon as possible">As soon as possible</option>
+                            <option value="Within 2 weeks">Within 2 weeks</option>
+                            <option value="Within a month">Within a month</option>
+                            <option value="Flexible">Flexible</option>
                           </select>
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-bark mb-1.5">Budget range</label>
                           <select name="budget" className="w-full px-3 py-2 border border-wheat rounded-xl text-bark bg-white focus:outline-none focus:border-moss text-sm">
                             <option value="">Not sure yet</option>
-                            <option value="under50">Under $50</option>
-                            <option value="50-150">$50 – $150</option>
-                            <option value="150-500">$150 – $500</option>
-                            <option value="500+">$500+</option>
+                            <option value="Under $50">Under $50</option>
+                            <option value="$50 – $150">$50 – $150</option>
+                            <option value="$150 – $500">$150 – $500</option>
+                            <option value="$500+">$500+</option>
                           </select>
                         </div>
                       </div>
@@ -149,6 +191,10 @@ export default function ContactButton({ sellerName, customOrdersOpen }: ContactB
                         className="w-full px-3 py-2.5 border border-wheat rounded-xl text-bark placeholder-bark/35 focus:outline-none focus:border-moss focus:ring-1 focus:ring-moss text-sm resize-none"
                       />
                     </div>
+                  )}
+
+                  {formStatus === "error" && (
+                    <p className="text-clay text-sm">{errorMsg}</p>
                   )}
 
                   <button

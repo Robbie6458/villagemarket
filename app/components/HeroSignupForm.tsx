@@ -120,12 +120,12 @@ export default function HeroSignupForm() {
           </div>
         </div>
 
-        <label className="flex items-center gap-2.5 cursor-pointer group">
+        <label className="flex items-start gap-3 cursor-pointer group">
           <input
             type="checkbox"
             checked={isGuest}
             onChange={(e) => setIsGuest(e.target.checked)}
-            className="w-4 h-4 rounded border-wheat accent-moss cursor-pointer"
+            className="w-4 h-4 mt-0.5 rounded border-wheat accent-moss cursor-pointer shrink-0"
           />
           <span className="text-sm text-bark/70 group-hover:text-bark transition-colors leading-snug">
             I&apos;m staying at a Village Collective rental

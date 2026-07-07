@@ -1,14 +1,10 @@
+import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { getSeller, SELLERS } from "@/lib/seed-data";
 import { AvailabilityStatus } from "@/lib/types";
 import ContactButton from "./ContactButton";
 import DeliveryMapLoader from "@/components/DeliveryMapLoader";
-
-export function generateStaticParams() {
-  return SELLERS.map((s) => ({ slug: s.slug }));
-}
 
 const STATUS_LABELS: Record<AvailabilityStatus, { label: string; color: string }> = {
   available:     { label: "Available Now",  color: "bg-moss/10 text-moss" },
@@ -27,14 +23,36 @@ export default async function SellerPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const seller = getSeller(slug);
+
+  const supabase = await createClient();
+  const { data: seller } = await supabase
+    .from("sellers")
+    .select("*, products(*)")
+    .eq("slug", slug)
+    .eq("is_active", true)
+    .single();
+
   if (!seller) notFound();
+
+  const products = (seller.products ?? []) as Array<{
+    id: string;
+    title: string;
+    description: string;
+    price: number;
+    price_label: string | null;
+    photo_url: string;
+    availability_status: AvailabilityStatus;
+  }>;
 
   return (
     <div className="min-h-screen bg-mist">
       {/* Cover photo */}
       <div className="relative h-56 md:h-72 lg:h-80 w-full bg-wheat">
-        <Image src={seller.cover_photo_url} alt={seller.name} fill className="object-cover" priority />
+        {seller.cover_photo_url ? (
+          <Image src={seller.cover_photo_url} alt={seller.name} fill className="object-cover" priority />
+        ) : (
+          <div className="w-full h-full bg-linear-to-br from-wheat to-cream" />
+        )}
         <div className="absolute inset-0 bg-linear-to-t from-bark/60 to-transparent" />
         <Link
           href="/"
@@ -48,8 +66,14 @@ export default async function SellerPage({
         {/* Profile card */}
         <div className="bg-white rounded-2xl shadow-sm p-6 mb-6">
           <div className="flex flex-col sm:flex-row gap-4">
-            <div className="relative w-20 h-20 rounded-full overflow-hidden border-4 border-white shadow-md shrink-0">
-              <Image src={seller.profile_photo_url} alt={seller.name} fill className="object-cover" />
+            <div className="relative w-20 h-20 rounded-full overflow-hidden border-4 border-white shadow-md shrink-0 bg-cream">
+              {seller.profile_photo_url ? (
+                <Image src={seller.profile_photo_url} alt={seller.name} fill className="object-cover" />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-bark/40 text-2xl font-semibold" style={{ fontFamily: "var(--font-serif)" }}>
+                  {seller.name[0]}
+                </div>
+              )}
             </div>
 
             <div className="flex-1 min-w-0">
@@ -57,6 +81,16 @@ export default async function SellerPage({
                 <h1 className="text-2xl md:text-3xl text-bark" style={{ fontFamily: "var(--font-serif)" }}>
                   {seller.name}
                 </h1>
+                {seller.founding_maker && (
+                  <span className="bg-clay text-white text-[10px] font-medium px-2 py-0.5 rounded-full mt-1.5">
+                    🌱 Founding Maker
+                  </span>
+                )}
+                {seller.monthly_supporter && (
+                  <span className="bg-sage text-white text-[10px] font-medium px-2 py-0.5 rounded-full mt-1.5">
+                    ♡ Supporter
+                  </span>
+                )}
                 {seller.community_contributor && (
                   <span className="bg-moss text-white text-[10px] font-medium px-2 py-0.5 rounded-full mt-1.5">
                     Community Contributor
@@ -73,7 +107,7 @@ export default async function SellerPage({
                 <span className="text-xs text-sage font-medium bg-cream px-2 py-0.5 rounded-full">
                   📍 {seller.location_label}
                 </span>
-                {seller.categories.map((cat) => (
+                {(seller.categories as string[]).map((cat) => (
                   <span key={cat} className="text-xs text-moss bg-moss/10 px-2 py-0.5 rounded-full font-medium">{cat}</span>
                 ))}
                 <span className={`flex items-center gap-1 text-xs font-medium ${seller.is_available_now ? "text-moss" : "text-bark/40"}`}>
@@ -84,7 +118,7 @@ export default async function SellerPage({
             </div>
 
             <div className="shrink-0">
-              <ContactButton sellerName={seller.name} customOrdersOpen={seller.custom_orders_open} />
+              <ContactButton slug={seller.slug} sellerName={seller.name} customOrdersOpen={seller.custom_orders_open} />
             </div>
           </div>
         </div>
@@ -99,42 +133,48 @@ export default async function SellerPage({
               <p className="text-bark/70 leading-relaxed text-sm">{seller.bio}</p>
             </div>
 
-            <div className="bg-white rounded-2xl p-6">
-              <h2 className="text-lg text-bark mb-4" style={{ fontFamily: "var(--font-serif)" }}>What I Make</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {seller.products.map((product) => {
-                  const status = STATUS_LABELS[product.availability_status];
-                  return (
-                    <div key={product.id} className="border border-wheat rounded-xl overflow-hidden">
-                      <div className="relative h-40 bg-cream">
-                        <Image
-                          src={product.photo_url}
-                          alt={product.title}
-                          fill
-                          className="object-cover"
-                          sizes="(max-width: 640px) 100vw, 50vw"
-                        />
-                      </div>
-                      <div className="p-3">
-                        <div className="flex items-start justify-between gap-2 mb-1">
-                          <h3 className="font-medium text-bark text-sm leading-tight">{product.title}</h3>
-                          <span className={`shrink-0 text-[10px] font-medium px-2 py-0.5 rounded-full ${status.color}`}>
-                            {status.label}
-                          </span>
-                        </div>
-                        <p className="text-bark/55 text-xs leading-snug mb-2">{product.description}</p>
-                        <p className="text-bark font-semibold text-sm">
-                          ${product.price.toLocaleString()}
-                          {product.price_label && (
-                            <span className="text-bark/40 font-normal text-xs ml-1">{product.price_label}</span>
+            {products.length > 0 && (
+              <div className="bg-white rounded-2xl p-6">
+                <h2 className="text-lg text-bark mb-4" style={{ fontFamily: "var(--font-serif)" }}>What I Make</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {products.map((product) => {
+                    const status = STATUS_LABELS[product.availability_status] ?? STATUS_LABELS.available;
+                    return (
+                      <div key={product.id} className="border border-wheat rounded-xl overflow-hidden">
+                        <div className="relative h-40 bg-cream">
+                          {product.photo_url ? (
+                            <Image
+                              src={product.photo_url}
+                              alt={product.title}
+                              fill
+                              className="object-cover"
+                              sizes="(max-width: 640px) 100vw, 50vw"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center text-bark/20 text-xs">No photo yet</div>
                           )}
-                        </p>
+                        </div>
+                        <div className="p-3">
+                          <div className="flex items-start justify-between gap-2 mb-1">
+                            <h3 className="font-medium text-bark text-sm leading-tight">{product.title}</h3>
+                            <span className={`shrink-0 text-[10px] font-medium px-2 py-0.5 rounded-full ${status.color}`}>
+                              {status.label}
+                            </span>
+                          </div>
+                          <p className="text-bark/55 text-xs leading-snug mb-2">{product.description}</p>
+                          <p className="text-bark font-semibold text-sm">
+                            ${Number(product.price).toLocaleString()}
+                            {product.price_label && (
+                              <span className="text-bark/40 font-normal text-xs ml-1">{product.price_label}</span>
+                            )}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
           {/* Right: details */}
@@ -142,7 +182,7 @@ export default async function SellerPage({
             <div className="bg-white rounded-2xl p-5">
               <h3 className="text-sm font-medium text-bark mb-3">Accepted Payments</h3>
               <div className="flex flex-wrap gap-2">
-                {seller.accepted_payments.map((method) => (
+                {(seller.accepted_payments as string[]).map((method) => (
                   <span key={method} className="text-xs bg-cream text-bark px-3 py-1 rounded-full">
                     {PAYMENT_LABELS[method] ?? method}
                   </span>
@@ -158,16 +198,28 @@ export default async function SellerPage({
               </div>
             </div>
 
-            {/* Delivery — map if available, text if not */}
+            {/* Delivery */}
             <div className="bg-white rounded-2xl overflow-hidden">
               <div className="p-5 pb-3">
                 <h3 className="text-sm font-medium text-bark mb-1">Delivery</h3>
                 {seller.delivery_available ? (
-                  <p className="text-sm text-bark/70">
-                    Delivers within{" "}
-                    <span className="font-medium text-bark">{seller.delivery_radius_miles} miles</span>{" "}
-                    of {seller.location_label}
-                  </p>
+                  <div className="space-y-1">
+                    <p className="text-sm text-bark/70">
+                      Delivers within{" "}
+                      <span className="font-medium text-bark">{seller.delivery_radius_miles} miles</span>{" "}
+                      of {seller.location_label}
+                    </p>
+                    {seller.delivery_fee != null && (
+                      <p className="text-sm text-bark/70">
+                        <span className="font-medium text-bark">
+                          {seller.delivery_fee === 0 ? "Free delivery" : `$${Number(seller.delivery_fee).toFixed(2)} delivery fee`}
+                        </span>
+                        {seller.delivery_fee_label && (
+                          <span className="text-bark/50"> · {seller.delivery_fee_label}</span>
+                        )}
+                      </p>
+                    )}
+                  </div>
                 ) : (
                   <p className="text-sm text-bark/40">Pickup only — no delivery</p>
                 )}
