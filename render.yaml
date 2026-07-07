@@ -23,15 +23,23 @@ services:
         sync: false
       - key: SUPABASE_SERVICE_ROLE_KEY
         sync: false
-      - key: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
-        sync: false
       - key: STRIPE_SECRET_KEY
         sync: false
       - key: STRIPE_WEBHOOK_SECRET
         sync: false
+      - key: NEXT_PUBLIC_STRIPE_ONBOARDING_LINK
+        sync: false
+      - key: NEXT_PUBLIC_STRIPE_TIP_LINK
+        sync: false
+      - key: NEXT_PUBLIC_STRIPE_RECURRING_LINK
+        sync: false
       - key: RESEND_API_KEY
         sync: false
-      - key: ADMIN_PASSWORD
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: CRON_SECRET
+        sync: false
+      - key: NEXT_PUBLIC_ML_APP_GROUP_ID
         sync: false
       - key: NEXT_PUBLIC_APP_URL
-        sync: false
+        value: https://market.village-collective.com
