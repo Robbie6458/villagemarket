@@ -41,5 +41,7 @@ services:
         sync: false
       - key: NEXT_PUBLIC_ML_APP_GROUP_ID
         sync: false
+      - key: MAILERLITE_API_KEY
+        sync: false
       - key: NEXT_PUBLIC_APP_URL
         value: https://market.village-collective.com

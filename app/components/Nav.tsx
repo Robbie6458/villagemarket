@@ -3,11 +3,13 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useGeo } from "@/lib/geo-context";
+import { useBag } from "@/lib/bag-context";
 import { createClient } from "@/lib/supabase/client";
 
 export default function Nav() {
   const [menuOpen, setMenuOpen] = useState(false);
   const { isLocal, status } = useGeo();
+  const { count } = useBag();
   const [sellerLoggedIn, setSellerLoggedIn] = useState(false);
 
   useEffect(() => {
@@ -48,6 +50,16 @@ export default function Nav() {
             <Link href="/apply" className="bg-clay hover:bg-clay-lt text-white text-sm font-medium px-4 py-2 rounded-full transition-colors">
               Apply to Sell
             </Link>
+            <Link href="/bag" className="relative text-wheat hover:text-white transition-colors" aria-label="View bag">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 11H4L5 9z" />
+              </svg>
+              {count > 0 && (
+                <span className="absolute -top-2 -right-2 bg-clay text-white text-[10px] font-medium w-4 h-4 rounded-full flex items-center justify-center">
+                  {count}
+                </span>
+              )}
+            </Link>
             {status !== "checking" && (
               <span className="flex items-center gap-1.5 text-xs text-sage">
                 <span className={`w-2 h-2 rounded-full ${isLocal ? "bg-sage" : "bg-clay"}`} />
@@ -72,6 +84,9 @@ export default function Nav() {
           <Link href="/" className="text-wheat text-base font-medium" onClick={() => setMenuOpen(false)}>Browse</Link>
           <Link href="/for-guests" className="text-wheat text-base font-medium" onClick={() => setMenuOpen(false)}>For Guests</Link>
           <Link href="/barter" className="text-wheat text-base font-medium" onClick={() => setMenuOpen(false)}>Barter</Link>
+          <Link href="/bag" className="text-wheat text-base font-medium" onClick={() => setMenuOpen(false)}>
+            Bag{count > 0 ? ` (${count})` : ""}
+          </Link>
           <Link href={sellerLink.href} className="text-wheat/60 text-base" onClick={() => setMenuOpen(false)}>
             {sellerLink.label}
           </Link>

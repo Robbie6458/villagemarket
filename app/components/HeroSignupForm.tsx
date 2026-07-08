@@ -1,14 +1,7 @@
 "use client";
 
 import { useState } from "react";
-
-const ML_API_KEY =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI0IiwianRpIjoiMTZhZDdlZThhN2Y4ZDhiNDM3ZjVkMDU1MmE4YWEzN2RhZjNlYzBhZTE4ODVlNTVkNzRjNjkxZmYzMDVkZDcyNDhmODI0N2QyYTNhYTQ2ZjEiLCJpYXQiOjE3NzI1MTA4MDguOTA3NTIyLCJuYmYiOjE3NzI1MTA4MDguOTA3NTI0LCJleHAiOjQ5MjgxODQ0MDguOTAzMTcyLCJzdWIiOiI3ODQ4NTciLCJzY29wZXMiOltdfQ.CM75A-NHKS0BCXUm_od00ACaJvsdEEDjmcWvxQoMo-UNiteYW04JOD6iHrtadpLP72OlqFa49lyB3uI56-bkJ4K9Vd-N96vk5r-yeNz4baPi1tOeRjr3v7FFFRi1-ANuC98QQnq9TzypBtcFUF-STJDDp9YzggUHHnu9TjxCeSdt_ID33-DqgxSYax-geE1BQh3STyiomzye63XgRk4jdQJ13oaQ9_d5DAggGZ9f2ctPiLdC3Kbzjmof3BVbPOjDontHxI8d19xS-t8bPT6aHBdv3TCSWMhP9LbDIAPU4zZrHK7Z_77ixgm-RRw_bkUEOxxU1tXjv1e0SnIkk48J5DS3etMMQEezIHUgGQsI7YfUCSvmjuGFfP7F0QrtdKs0Cvxtl55RZzBMvhM4rKxCPq-aR0d6RmyWtU9GuyhD6rv-wZDO7rN8MqoP7EWDaNZwbkkqCxBsmGxB28vf9BlqzZBoyMB0HnvpXbXc1lrIMVEXXOs8wJAPnlUxGP8g4G0Vx7QxA5p7YAdLeMQUCVmYylW0560W9fCoWnoILkPYfB7Mw57TqcwuCgGyf4wmKexEXpAzxvEOoMCSM1Oaa93wwlCNVUwn_wsCMT63sNPNJPmldcCIeZFOWRLRaqMT4NLAbb-dqeH31MaJOTGwigXA4QpiVKUNkY0-ouUHeGDcjqE";
-
-// Create a "Village Market App" group in MailerLite and paste the group ID here
-// or set NEXT_PUBLIC_ML_APP_GROUP_ID in .env.local
-const ML_GROUP_ID =
-  process.env.NEXT_PUBLIC_ML_APP_GROUP_ID ?? "REPLACE_WITH_APP_GROUP_ID";
+import { subscribeToMailerLite } from "@/lib/mailerlite";
 
 type FormStatus = "idle" | "submitting" | "sent" | "error";
 
@@ -25,27 +18,12 @@ export default function HeroSignupForm() {
     const name  = (form.elements.namedItem("name")  as HTMLInputElement).value.trim();
     const email = (form.elements.namedItem("email") as HTMLInputElement).value.trim();
 
-    try {
-      const res = await fetch("https://connect.mailerlite.com/api/subscribers", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${ML_API_KEY}`,
-        },
-        body: JSON.stringify({
-          email,
-          fields: { name, role, is_vacation_guest: isGuest ? "yes" : "no" },
-          groups: [ML_GROUP_ID],
-        }),
-      });
-
-      if (!res.ok && res.status !== 200 && res.status !== 201) {
-        throw new Error(`MailerLite ${res.status}`);
-      }
-      setStatus("sent");
-    } catch {
-      setStatus("error");
-    }
+    const { success } = await subscribeToMailerLite(email, {
+      name,
+      role,
+      is_vacation_guest: isGuest ? "yes" : "no",
+    });
+    setStatus(success ? "sent" : "error");
   }
 
   if (status === "sent") {

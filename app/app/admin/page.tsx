@@ -22,6 +22,7 @@ export default async function AdminPage() {
     { data: applications },
     { data: sellers },
     { count: pendingCount },
+    { data: guestRequests },
   ] = await Promise.all([
     admin
       .from("seller_applications")
@@ -33,11 +34,21 @@ export default async function AdminPage() {
       .from("seller_applications")
       .select("*", { count: "exact", head: true })
       .eq("status", "pending"),
+    admin
+      .from("contact_requests")
+      .select("vc_property")
+      .not("vc_property", "is", null),
   ]);
 
   const pending = applications?.filter((a) => a.status === "pending") ?? [];
   const activeSellers = sellers?.filter((s) => s.is_active) ?? [];
   const contributors = sellers?.filter((s) => s.community_contributor) ?? [];
+
+  const propertyCounts = (guestRequests ?? []).reduce((acc, r) => {
+    if (r.vc_property) acc[r.vc_property] = (acc[r.vc_property] ?? 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+  const topProperties = Object.entries(propertyCounts).sort((a, b) => b[1] - a[1]);
 
   return (
     <div className="min-h-screen bg-mist">
@@ -71,6 +82,28 @@ export default async function AdminPage() {
         <ApplicationsQueue applications={pending} />
 
         <FeaturedManager sellers={sellers ?? []} />
+
+        {/* Rentals driving sales */}
+        {topProperties.length > 0 && (
+          <section className="bg-white rounded-2xl p-6 mb-8">
+            <h2 className="text-lg text-bark mb-1" style={{ fontFamily: "var(--font-serif)" }}>
+              Rentals Driving Sales
+            </h2>
+            <p className="text-bark/50 text-sm mb-4">
+              Order requests from guests who identified their Village Collective property at checkout.
+            </p>
+            <div className="space-y-2">
+              {topProperties.map(([property, count]) => (
+                <div key={property} className="flex items-center justify-between py-1.5">
+                  <span className="text-sm text-bark">{property}</span>
+                  <span className="text-sm font-medium text-bark/60 bg-cream px-2.5 py-0.5 rounded-full">
+                    {count} request{count !== 1 ? "s" : ""}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* All sellers */}
         <section className="bg-white rounded-2xl p-6">

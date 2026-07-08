@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Playfair_Display, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { GeoProvider } from "@/lib/geo-context";
+import { BagProvider } from "@/lib/bag-context";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 
@@ -41,9 +42,11 @@ export default function RootLayout({
     <html lang="en" className={`${playfair.variable} ${dmSans.variable}`}>
       <body className="min-h-screen flex flex-col">
         <GeoProvider>
-          <Nav />
-          <main className="flex-1">{children}</main>
-          <Footer />
+          <BagProvider>
+            <Nav />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </BagProvider>
         </GeoProvider>
       </body>
     </html>
