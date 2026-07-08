@@ -11,11 +11,13 @@ type Product = {
   description: string;
   price: number;
   price_label: string | null;
-  photo_url: string;
+  photo_urls: string[];
   category: string;
   availability_status: string;
   is_custom_order: boolean;
   is_active: boolean;
+  is_highlighted: boolean;
+  restocking: boolean;
 };
 
 const AVAILABILITY = [
@@ -24,24 +26,31 @@ const AVAILABILITY = [
   { value: "made_to_order", label: "Made to order" },
 ];
 
+const MAX_PHOTOS = 6;
+const MAX_HIGHLIGHTED = 2;
+
 const emptyForm: {
   title: string;
   description: string;
   price: string;
   price_label: string;
-  photo_url: string;
+  photo_urls: string[];
   category: string;
   availability_status: string;
   is_custom_order: boolean;
+  is_highlighted: boolean;
+  restocking: boolean;
 } = {
   title: "",
   description: "",
   price: "",
   price_label: "",
-  photo_url: "",
+  photo_urls: [],
   category: CATEGORIES[0],
   availability_status: "available",
   is_custom_order: false,
+  is_highlighted: false,
+  restocking: false,
 };
 
 export default function ProductManager({
@@ -72,19 +81,23 @@ export default function ProductManager({
       description: product.description,
       price: String(product.price),
       price_label: product.price_label ?? "",
-      photo_url: product.photo_url,
+      photo_urls: product.photo_urls,
       category: product.category,
       availability_status: product.availability_status,
       is_custom_order: product.is_custom_order,
+      is_highlighted: product.is_highlighted,
+      restocking: product.restocking,
     });
     setEditingId(product.id);
     setShowForm(true);
   }
 
-  async function uploadProductImage(file: File): Promise<string> {
-    setUploading(true);
+  const highlightedCount = products.filter((p) => p.is_highlighted && p.id !== editingId).length;
+  const highlightCapReached = highlightedCount >= MAX_HIGHLIGHTED;
+
+  async function uploadProductImage(file: File, index: number): Promise<string> {
     const supabase = createClient();
-    const path = `${sellerId}/products/${Date.now()}-${file.name}`;
+    const path = `${sellerId}/products/${Date.now()}-${index}-${file.name}`;
     const { error } = await supabase.storage
       .from("seller-images")
       .upload(path, file, { upsert: true });
@@ -92,8 +105,37 @@ export default function ProductManager({
     if (error) throw new Error(error.message);
 
     const { data } = supabase.storage.from("seller-images").getPublicUrl(path);
-    setUploading(false);
     return data.publicUrl;
+  }
+
+  async function handleAddPhotos(files: FileList) {
+    const room = MAX_PHOTOS - form.photo_urls.length;
+    if (room <= 0) return;
+    const toUpload = Array.from(files).slice(0, room);
+
+    setUploading(true);
+    try {
+      const urls = await Promise.all(toUpload.map((file, i) => uploadProductImage(file, i)));
+      setForm((f) => ({ ...f, photo_urls: [...f.photo_urls, ...urls] }));
+    } catch (err) {
+      alert("Upload failed: " + (err as Error).message);
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  function removePhoto(index: number) {
+    setForm((f) => ({ ...f, photo_urls: f.photo_urls.filter((_, i) => i !== index) }));
+  }
+
+  function movePhoto(index: number, direction: -1 | 1) {
+    setForm((f) => {
+      const next = [...f.photo_urls];
+      const target = index + direction;
+      if (target < 0 || target >= next.length) return f;
+      [next[index], next[target]] = [next[target], next[index]];
+      return { ...f, photo_urls: next };
+    });
   }
 
   async function handleSave() {
@@ -109,10 +151,12 @@ export default function ProductManager({
         description: form.description,
         price: parseFloat(form.price),
         price_label: form.price_label || "",
-        photo_url: form.photo_url,
+        photo_urls: form.photo_urls,
         category: form.category,
         availability_status: form.availability_status,
         is_custom_order: form.is_custom_order,
+        is_highlighted: form.is_highlighted,
+        restocking: form.restocking,
       };
 
       if (editingId) {
@@ -245,39 +289,106 @@ export default function ProductManager({
               </select>
             </div>
 
-            {/* Photo */}
-            <div className="sm:col-span-2">
-              <label className="block text-xs font-medium text-bark mb-1.5">Photo</label>
-              <div className="flex items-center gap-3">
-                {form.photo_url && (
-                  <img
-                    src={form.photo_url}
-                    alt=""
-                    className="w-16 h-16 rounded-lg object-cover border border-wheat"
-                  />
-                )}
-                <button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  disabled={uploading}
-                  className="text-xs text-moss hover:underline disabled:opacity-50"
+            {/* Highlight + restocking */}
+            <div className="sm:col-span-2 flex flex-wrap gap-5">
+              <label className={`flex items-center gap-2 ${highlightCapReached && !form.is_highlighted ? "opacity-40" : "cursor-pointer"}`}>
+                <div
+                  onClick={() => {
+                    if (highlightCapReached && !form.is_highlighted) return;
+                    setForm((f) => ({ ...f, is_highlighted: !f.is_highlighted }));
+                  }}
+                  className={`w-9 h-5 rounded-full transition-colors relative shrink-0 ${form.is_highlighted ? "bg-clay" : "bg-wheat"}`}
                 >
-                  {uploading ? "Uploading…" : form.photo_url ? "Change photo" : "Upload photo"}
-                </button>
+                  <span className={`absolute top-1 w-3 h-3 rounded-full bg-white shadow transition-transform ${form.is_highlighted ? "translate-x-4.5" : "translate-x-1"}`} />
+                </div>
+                <span className="text-xs text-bark">
+                  ⭐ Highlight as best seller
+                  {highlightCapReached && !form.is_highlighted && (
+                    <span className="text-bark/40"> (max {MAX_HIGHLIGHTED} — unhighlight another first)</span>
+                  )}
+                </span>
+              </label>
+
+              <label className="flex items-center gap-2 cursor-pointer">
+                <div
+                  onClick={() => setForm((f) => ({ ...f, restocking: !f.restocking }))}
+                  className={`w-9 h-5 rounded-full transition-colors relative shrink-0 ${form.restocking ? "bg-clay" : "bg-wheat"}`}
+                >
+                  <span className={`absolute top-1 w-3 h-3 rounded-full bg-white shadow transition-transform ${form.restocking ? "translate-x-4.5" : "translate-x-1"}`} />
+                </div>
+                <span className="text-xs text-bark">Restocking soon</span>
+              </label>
+            </div>
+
+            {/* Photos */}
+            <div className="sm:col-span-2">
+              <label className="block text-xs font-medium text-bark mb-1.5">
+                Photos <span className="font-normal text-bark/40">(first photo is the cover — {form.photo_urls.length}/{MAX_PHOTOS})</span>
+              </label>
+              <div className="flex flex-wrap gap-3">
+                {form.photo_urls.map((url, i) => (
+                  <div key={url + i} className="relative w-16 h-16 group/photo">
+                    <img
+                      src={url}
+                      alt=""
+                      className="w-16 h-16 rounded-lg object-cover border border-wheat"
+                    />
+                    {i === 0 && (
+                      <span className="absolute -top-1.5 -left-1.5 bg-moss text-white text-[9px] font-medium px-1.5 py-0.5 rounded-full">
+                        Cover
+                      </span>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => removePhoto(i)}
+                      className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-bark text-white text-[10px] leading-none flex items-center justify-center opacity-0 group-hover/photo:opacity-100 transition-opacity"
+                      aria-label="Remove photo"
+                    >
+                      ×
+                    </button>
+                    <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 flex gap-0.5 opacity-0 group-hover/photo:opacity-100 transition-opacity">
+                      {i > 0 && (
+                        <button
+                          type="button"
+                          onClick={() => movePhoto(i, -1)}
+                          className="w-4 h-4 rounded-full bg-white border border-wheat text-bark text-[9px] leading-none flex items-center justify-center"
+                          aria-label="Move left"
+                        >
+                          ‹
+                        </button>
+                      )}
+                      {i < form.photo_urls.length - 1 && (
+                        <button
+                          type="button"
+                          onClick={() => movePhoto(i, 1)}
+                          className="w-4 h-4 rounded-full bg-white border border-wheat text-bark text-[9px] leading-none flex items-center justify-center"
+                          aria-label="Move right"
+                        >
+                          ›
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+                {form.photo_urls.length < MAX_PHOTOS && (
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={uploading}
+                    className="w-16 h-16 rounded-lg border border-dashed border-wheat text-bark/40 hover:border-moss hover:text-moss disabled:opacity-50 flex items-center justify-center text-xs transition-colors"
+                  >
+                    {uploading ? "…" : "+ Add"}
+                  </button>
+                )}
                 <input
                   ref={fileInputRef}
                   type="file"
                   accept="image/*"
+                  multiple
                   className="hidden"
                   onChange={async (e) => {
-                    const file = e.target.files?.[0];
-                    if (!file) return;
-                    try {
-                      const url = await uploadProductImage(file);
-                      setForm((f) => ({ ...f, photo_url: url }));
-                    } catch (err) {
-                      alert("Upload failed: " + (err as Error).message);
-                    }
+                    if (e.target.files?.length) await handleAddPhotos(e.target.files);
+                    e.target.value = "";
                   }}
                 />
               </div>
@@ -312,16 +423,29 @@ export default function ProductManager({
       <div className="divide-y divide-wheat">
         {products.map((product) => (
           <div key={product.id} className={`py-3 flex items-center gap-3 ${!product.is_active ? "opacity-50" : ""}`}>
-            {product.photo_url && (
-              <img
-                src={product.photo_url}
-                alt={product.title}
-                className="w-12 h-12 rounded-lg object-cover border border-wheat shrink-0"
-              />
+            {product.photo_urls.length > 0 && (
+              <div className="relative shrink-0">
+                <img
+                  src={product.photo_urls[0]}
+                  alt={product.title}
+                  className="w-12 h-12 rounded-lg object-cover border border-wheat"
+                />
+                {product.photo_urls.length > 1 && (
+                  <span className="absolute -bottom-1 -right-1 bg-bark text-white text-[9px] font-medium w-4 h-4 rounded-full flex items-center justify-center">
+                    {product.photo_urls.length}
+                  </span>
+                )}
+              </div>
             )}
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
                 <p className="font-medium text-bark text-sm truncate">{product.title}</p>
+                {product.is_highlighted && (
+                  <span className="shrink-0 text-[10px] text-clay">⭐</span>
+                )}
+                {product.restocking && (
+                  <span className="shrink-0 text-[10px] text-clay bg-clay/10 px-2 py-0.5 rounded-full">Restocking</span>
+                )}
                 {!product.is_active && (
                   <span className="shrink-0 text-[10px] text-bark/40 bg-wheat px-2 py-0.5 rounded-full">Hidden</span>
                 )}

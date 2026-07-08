@@ -7,9 +7,11 @@ export interface Product {
   description: string;
   price: number;
   price_label?: string; // e.g. "per dozen", "per lb"
-  photo_url: string;
+  photo_urls: string[];
   category: string;
   availability_status: AvailabilityStatus;
+  is_highlighted: boolean;
+  restocking: boolean;
 }
 
 export interface Seller {
@@ -38,6 +40,8 @@ export interface Seller {
   featured: boolean;
   verified: boolean;
   contact_email?: string;
+  instagram_url?: string;
+  website_url?: string;
   products: Product[];
 }
 
@@ -70,4 +74,15 @@ export const NEIGHBORHOODS = [
   "Rathdrum",
   "Sandpoint",
   "Other North Idaho",
+] as const;
+
+export const VC_PROPERTIES = [
+  "The Garden House",
+  "Pine and Vine Cottage",
+  "Riverstone Retreat",
+  "Bayview Cabin",
+  "Heart of CDA",
+  "River-Camp Lodge",
+  "Pheasant Run Condo",
+  "Woodland Tipi",
 ] as const;

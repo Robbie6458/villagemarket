@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import QRCode from "qrcode";
 import { updateStorefront, goLive, goOffline, markOnboardingPaid } from "./actions";
 import { createClient } from "@/lib/supabase/client";
 import { PAYMENT_METHODS, NEIGHBORHOODS } from "@/lib/types";
@@ -24,6 +25,8 @@ type Seller = {
   is_available_now: boolean;
   is_active: boolean;
   onboarding_paid: boolean;
+  instagram_url: string | null;
+  website_url: string | null;
 };
 
 export default function StorefrontEditor({ seller }: { seller: Seller }) {
@@ -40,6 +43,8 @@ export default function StorefrontEditor({ seller }: { seller: Seller }) {
   const [available, setAvailable] = useState(seller.is_available_now);
   const [coverUrl, setCoverUrl] = useState(seller.cover_photo_url);
   const [profileUrl, setProfileUrl] = useState(seller.profile_photo_url);
+  const [instagram, setInstagram] = useState(seller.instagram_url ?? "");
+  const [website, setWebsite] = useState(seller.website_url ?? "");
 
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -48,9 +53,29 @@ export default function StorefrontEditor({ seller }: { seller: Seller }) {
   const [markingPaid, setMarkingPaid] = useState(false);
   const [uploadingCover, setUploadingCover] = useState(false);
   const [uploadingProfile, setUploadingProfile] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
 
   const coverInputRef = useRef<HTMLInputElement>(null);
   const profileInputRef = useRef<HTMLInputElement>(null);
+
+  const storefrontUrl = `${process.env.NEXT_PUBLIC_APP_URL ?? ""}/sellers/${seller.slug}`;
+
+  useEffect(() => {
+    QRCode.toDataURL(storefrontUrl, { width: 200, margin: 1, color: { dark: "#2C2417", light: "#F9F6F0" } })
+      .then(setQrDataUrl)
+      .catch(() => setQrDataUrl(null));
+  }, [storefrontUrl]);
+
+  async function handleCopyLink() {
+    try {
+      await navigator.clipboard.writeText(storefrontUrl);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // clipboard API unavailable — ignore, link is still visible to copy manually
+    }
+  }
 
   const togglePayment = (method: string) =>
     setPayments((prev) =>
@@ -98,6 +123,8 @@ export default function StorefrontEditor({ seller }: { seller: Seller }) {
         is_available_now: available,
         cover_photo_url: coverUrl,
         profile_photo_url: profileUrl,
+        instagram_url: instagram,
+        website_url: website,
       });
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
@@ -222,6 +249,42 @@ export default function StorefrontEditor({ seller }: { seller: Seller }) {
         </div>
       )}
 
+      {/* Share storefront */}
+      {seller.is_active && (
+        <section className="bg-white rounded-2xl p-6">
+          <h2 className="text-base font-medium text-bark mb-1">Share Your Storefront</h2>
+          <p className="text-bark/55 text-xs mb-4">
+            Print the QR code for your market booth, or share the link on your own social media.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-5 items-start">
+            {qrDataUrl && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={qrDataUrl} alt="QR code linking to your storefront" className="w-28 h-28 rounded-lg border border-wheat shrink-0" />
+            )}
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 bg-cream rounded-xl px-3 py-2.5 mb-2">
+                <span className="text-bark/70 text-xs truncate flex-1">{storefrontUrl}</span>
+                <button
+                  onClick={handleCopyLink}
+                  className="shrink-0 text-xs font-medium text-moss hover:underline"
+                >
+                  {copied ? "Copied!" : "Copy link"}
+                </button>
+              </div>
+              {qrDataUrl && (
+                <a
+                  href={qrDataUrl}
+                  download={`${seller.slug}-qr-code.png`}
+                  className="text-xs text-bark/50 hover:text-bark underline"
+                >
+                  Download QR code
+                </a>
+              )}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Photos */}
       <section className="bg-white rounded-2xl p-6">
         <h2 className="text-base font-medium text-bark mb-4">Photos</h2>
@@ -340,6 +403,31 @@ export default function StorefrontEditor({ seller }: { seller: Seller }) {
               <option key={n} value={n}>{n}</option>
             ))}
           </select>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-xs font-medium text-bark mb-1.5">
+              Instagram <span className="font-normal text-bark/40">(optional)</span>
+            </label>
+            <input
+              value={instagram}
+              onChange={(e) => setInstagram(e.target.value)}
+              placeholder="https://instagram.com/yourshop"
+              className="w-full px-3 py-2.5 border border-wheat rounded-xl text-bark placeholder-bark/35 focus:outline-none focus:border-moss focus:ring-1 focus:ring-moss text-sm"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-bark mb-1.5">
+              Website <span className="font-normal text-bark/40">(optional)</span>
+            </label>
+            <input
+              value={website}
+              onChange={(e) => setWebsite(e.target.value)}
+              placeholder="https://yourshop.com"
+              className="w-full px-3 py-2.5 border border-wheat rounded-xl text-bark placeholder-bark/35 focus:outline-none focus:border-moss focus:ring-1 focus:ring-moss text-sm"
+            />
+          </div>
         </div>
       </section>
 

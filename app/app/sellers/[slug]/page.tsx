@@ -5,6 +5,9 @@ import Link from "next/link";
 import { AvailabilityStatus } from "@/lib/types";
 import ContactButton from "./ContactButton";
 import DeliveryMapLoader from "@/components/DeliveryMapLoader";
+import ProductPhotoGallery from "./ProductPhotoGallery";
+import ShareButton from "./ShareButton";
+import AddToBagButton from "@/components/AddToBagButton";
 
 const STATUS_LABELS: Record<AvailabilityStatus, { label: string; color: string }> = {
   available:     { label: "Available Now",  color: "bg-moss/10 text-moss" },
@@ -40,9 +43,15 @@ export default async function SellerPage({
     description: string;
     price: number;
     price_label: string | null;
-    photo_url: string;
+    photo_urls: string[];
     availability_status: AvailabilityStatus;
+    is_highlighted: boolean;
+    restocking: boolean;
   }>;
+
+  const sortedProducts = [...products].sort(
+    (a, b) => Number(b.is_highlighted) - Number(a.is_highlighted)
+  );
 
   return (
     <div className="min-h-screen bg-mist">
@@ -114,10 +123,21 @@ export default async function SellerPage({
                   <span className={`w-2 h-2 rounded-full ${seller.is_available_now ? "bg-green-400" : "bg-bark/20"}`} />
                   {seller.is_available_now ? "Available now" : "Made to order"}
                 </span>
+                {seller.instagram_url && (
+                  <a href={seller.instagram_url} target="_blank" rel="noopener noreferrer" className="text-xs text-bark/50 hover:text-clay transition-colors">
+                    Instagram ↗
+                  </a>
+                )}
+                {seller.website_url && (
+                  <a href={seller.website_url} target="_blank" rel="noopener noreferrer" className="text-xs text-bark/50 hover:text-clay transition-colors">
+                    Website ↗
+                  </a>
+                )}
               </div>
             </div>
 
-            <div className="shrink-0">
+            <div className="shrink-0 flex items-center gap-2">
+              <ShareButton title={seller.name} />
               <ContactButton slug={seller.slug} sellerName={seller.name} customOrdersOpen={seller.custom_orders_open} />
             </div>
           </div>
@@ -133,41 +153,51 @@ export default async function SellerPage({
               <p className="text-bark/70 leading-relaxed text-sm">{seller.bio}</p>
             </div>
 
-            {products.length > 0 && (
+            {sortedProducts.length > 0 && (
               <div className="bg-white rounded-2xl p-6">
                 <h2 className="text-lg text-bark mb-4" style={{ fontFamily: "var(--font-serif)" }}>What I Make</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {products.map((product) => {
+                  {sortedProducts.map((product) => {
                     const status = STATUS_LABELS[product.availability_status] ?? STATUS_LABELS.available;
                     return (
                       <div key={product.id} className="border border-wheat rounded-xl overflow-hidden">
                         <div className="relative h-40 bg-cream">
-                          {product.photo_url ? (
-                            <Image
-                              src={product.photo_url}
-                              alt={product.title}
-                              fill
-                              className="object-cover"
-                              sizes="(max-width: 640px) 100vw, 50vw"
-                            />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center text-bark/20 text-xs">No photo yet</div>
+                          <ProductPhotoGallery photos={product.photo_urls} alt={product.title} />
+                          {product.is_highlighted && (
+                            <span className="absolute top-2 left-2 bg-clay text-white text-[10px] font-medium px-2 py-0.5 rounded-full">
+                              ⭐ Best Seller
+                            </span>
                           )}
                         </div>
                         <div className="p-3">
                           <div className="flex items-start justify-between gap-2 mb-1">
                             <h3 className="font-medium text-bark text-sm leading-tight">{product.title}</h3>
-                            <span className={`shrink-0 text-[10px] font-medium px-2 py-0.5 rounded-full ${status.color}`}>
-                              {status.label}
+                            <span className={`shrink-0 text-[10px] font-medium px-2 py-0.5 rounded-full ${product.restocking ? "bg-clay/10 text-clay" : status.color}`}>
+                              {product.restocking ? "Restocking Soon" : status.label}
                             </span>
                           </div>
                           <p className="text-bark/55 text-xs leading-snug mb-2">{product.description}</p>
-                          <p className="text-bark font-semibold text-sm">
+                          <p className="text-bark font-semibold text-sm mb-2">
                             ${Number(product.price).toLocaleString()}
                             {product.price_label && (
                               <span className="text-bark/40 font-normal text-xs ml-1">{product.price_label}</span>
                             )}
                           </p>
+                          {product.restocking ? (
+                            <p className="text-bark/40 text-xs text-center py-2">Check back soon</p>
+                          ) : (
+                            <AddToBagButton
+                              productId={product.id}
+                              title={product.title}
+                              price={Number(product.price)}
+                              priceLabel={product.price_label ?? undefined}
+                              photoUrl={product.photo_urls[0]}
+                              sellerId={seller.id}
+                              sellerSlug={seller.slug}
+                              sellerName={seller.name}
+                              sellerAcceptedPayments={seller.accepted_payments}
+                            />
+                          )}
                         </div>
                       </div>
                     );

@@ -32,6 +32,8 @@ export async function updateStorefront(data: {
   is_available_now: boolean;
   cover_photo_url?: string;
   profile_photo_url?: string;
+  instagram_url?: string;
+  website_url?: string;
 }) {
   const sellerId = await getCurrentSellerId();
   const supabase = await createClient();
@@ -87,10 +89,12 @@ export async function createProduct(data: {
   description: string;
   price: number;
   price_label: string;
-  photo_url: string;
+  photo_urls: string[];
   category: string;
   availability_status: string;
   is_custom_order: boolean;
+  is_highlighted: boolean;
+  restocking: boolean;
 }) {
   const sellerId = await getCurrentSellerId();
   const supabase = await createClient();
@@ -111,10 +115,12 @@ export async function updateProduct(
     description: string;
     price: number;
     price_label: string;
-    photo_url: string;
+    photo_urls: string[];
     category: string;
     availability_status: string;
     is_custom_order: boolean;
+    is_highlighted: boolean;
+    restocking: boolean;
   }
 ) {
   const sellerId = await getCurrentSellerId();
