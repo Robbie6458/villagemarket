@@ -25,11 +25,11 @@ export default function ContactButton({ slug, sellerName, customOrdersOpen }: Co
       <div className="group relative">
         <button
           disabled
-          className="bg-bark/10 text-bark/40 text-sm font-medium px-5 py-2.5 rounded-full cursor-not-allowed"
+          className="bg-bark/10 text-smoke text-sm font-medium px-5 py-2.5 rounded-full cursor-not-allowed"
         >
           Send a Request
         </button>
-        <div className="absolute bottom-full right-0 mb-2 bg-bark text-white text-xs rounded-lg px-3 py-2 w-52 text-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+        <div className="absolute bottom-full right-0 mb-2 bg-ember text-linen text-xs rounded-lg px-3 py-2 w-52 text-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
           Visit North Idaho to unlock the ability to contact local makers.
         </div>
       </div>
@@ -71,7 +71,7 @@ export default function ContactButton({ slug, sellerName, customOrdersOpen }: Co
     <>
       <button
         onClick={() => setOpen(true)}
-        className="bg-bark hover:bg-moss text-cream text-sm font-medium px-5 py-2.5 rounded-full transition-colors"
+        className="bg-gold hover:bg-goldsoft text-ember text-sm font-semibold px-5 py-2.5 rounded-full transition-colors"
       >
         {customOrdersOpen ? "Request Custom Order" : "Send a Message"}
       </button>
@@ -80,15 +80,15 @@ export default function ContactButton({ slug, sellerName, customOrdersOpen }: Co
       {open && (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4">
           <div
-            className="absolute inset-0 bg-bark/50 backdrop-blur-sm"
+            className="absolute inset-0 bg-ember/60 backdrop-blur-sm"
             onClick={handleClose}
           />
 
-          <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-md p-6 z-10">
+          <div className="relative bg-linen border border-fence rounded-2xl shadow-xl w-full max-w-md p-6 z-10">
             {formStatus === "sent" ? (
               <div className="text-center py-2">
-                <div className="w-12 h-12 bg-moss/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-6 h-6 text-moss" viewBox="0 0 20 20" fill="currentColor">
+                <div className="w-12 h-12 bg-gold/15 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-6 h-6 text-flamelo" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
                 </div>
@@ -98,16 +98,16 @@ export default function ContactButton({ slug, sellerName, customOrdersOpen }: Co
                 </p>
 
                 {process.env.NEXT_PUBLIC_STRIPE_TIP_LINK && (
-                  <div className="bg-cream rounded-xl p-4 mb-4 text-left">
+                  <div className="bg-lamp rounded-xl p-4 mb-4 text-left">
                     <p className="text-bark text-xs font-medium mb-1">If this connection leads somewhere good —</p>
-                    <p className="text-bark/60 text-xs leading-relaxed mb-3">
+                    <p className="text-smoke text-xs leading-relaxed mb-3">
                       A small tip helps keep Village Market free, local, and ad-free.
                     </p>
                     <a
                       href={process.env.NEXT_PUBLIC_STRIPE_TIP_LINK}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-block bg-bark hover:bg-moss text-cream text-xs font-medium px-4 py-2 rounded-full transition-colors"
+                      className="inline-block bg-gold hover:bg-goldsoft text-ember text-xs font-semibold px-4 py-2 rounded-full transition-colors"
                     >
                       Tip the Village ♡
                     </a>
@@ -143,20 +143,20 @@ export default function ContactButton({ slug, sellerName, customOrdersOpen }: Co
                     <>
                       <div>
                         <label className="block text-sm font-medium text-bark mb-1.5">
-                          What would you like made? <span className="text-clay">*</span>
+                          What would you like made? <span className="text-flame">*</span>
                         </label>
                         <textarea
                           name="request"
                           required
                           rows={3}
                           placeholder="Describe what you have in mind — size, materials, style, any details…"
-                          className="w-full px-3 py-2.5 border border-wheat rounded-xl text-bark placeholder-bark/35 focus:outline-none focus:border-moss focus:ring-1 focus:ring-moss text-sm resize-none"
+                          className="w-full px-3 py-2.5 border border-fence rounded-xl text-bark placeholder-smoke/60 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold text-sm resize-none"
                         />
                       </div>
                       <div className="grid grid-cols-2 gap-3">
                         <div>
                           <label className="block text-sm font-medium text-bark mb-1.5">Timeline</label>
-                          <select name="timeline" className="w-full px-3 py-2 border border-wheat rounded-xl text-bark bg-white focus:outline-none focus:border-moss text-sm">
+                          <select name="timeline" className="w-full px-3 py-2 border border-fence rounded-xl text-bark bg-linen focus:outline-none focus:border-gold text-sm">
                             <option value="">No preference</option>
                             <option value="As soon as possible">As soon as possible</option>
                             <option value="Within 2 weeks">Within 2 weeks</option>
@@ -166,7 +166,7 @@ export default function ContactButton({ slug, sellerName, customOrdersOpen }: Co
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-bark mb-1.5">Budget range</label>
-                          <select name="budget" className="w-full px-3 py-2 border border-wheat rounded-xl text-bark bg-white focus:outline-none focus:border-moss text-sm">
+                          <select name="budget" className="w-full px-3 py-2 border border-fence rounded-xl text-bark bg-linen focus:outline-none focus:border-gold text-sm">
                             <option value="">Not sure yet</option>
                             <option value="Under $50">Under $50</option>
                             <option value="$50 – $150">$50 – $150</option>
@@ -181,26 +181,26 @@ export default function ContactButton({ slug, sellerName, customOrdersOpen }: Co
                   {!customOrdersOpen && (
                     <div>
                       <label className="block text-sm font-medium text-bark mb-1.5">
-                        Message <span className="text-clay">*</span>
+                        Message <span className="text-flame">*</span>
                       </label>
                       <textarea
                         name="message"
                         required
                         rows={4}
                         placeholder="What would you like to ask or discuss?"
-                        className="w-full px-3 py-2.5 border border-wheat rounded-xl text-bark placeholder-bark/35 focus:outline-none focus:border-moss focus:ring-1 focus:ring-moss text-sm resize-none"
+                        className="w-full px-3 py-2.5 border border-fence rounded-xl text-bark placeholder-smoke/60 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold text-sm resize-none"
                       />
                     </div>
                   )}
 
                   {formStatus === "error" && (
-                    <p className="text-clay text-sm">{errorMsg}</p>
+                    <p className="text-flame text-sm">{errorMsg}</p>
                   )}
 
                   <button
                     type="submit"
                     disabled={formStatus === "submitting"}
-                    className="w-full bg-bark hover:bg-moss disabled:bg-bark/40 text-cream font-medium py-3 rounded-full transition-colors text-sm"
+                    className="w-full bg-gold hover:bg-goldsoft disabled:bg-gold/40 text-ember font-semibold py-3 rounded-full transition-colors text-sm"
                   >
                     {formStatus === "submitting" ? "Sending…" : "Send Request"}
                   </button>
@@ -218,13 +218,13 @@ function Field({ label, name, type = "text", required }: { label: string; name: 
   return (
     <div>
       <label className="block text-sm font-medium text-bark mb-1.5">
-        {label} {required && <span className="text-clay">*</span>}
+        {label} {required && <span className="text-flame">*</span>}
       </label>
       <input
         type={type}
         name={name}
         required={required}
-        className="w-full px-3 py-2.5 border border-wheat rounded-xl text-bark focus:outline-none focus:border-moss focus:ring-1 focus:ring-moss text-sm bg-white"
+        className="w-full px-3 py-2.5 border border-fence rounded-xl text-bark focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold text-sm bg-linen"
       />
     </div>
   );

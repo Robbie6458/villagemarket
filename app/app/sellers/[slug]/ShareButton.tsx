@@ -29,7 +29,7 @@ export default function ShareButton({ title }: { title: string }) {
   return (
     <button
       onClick={handleShare}
-      className="shrink-0 w-10 h-10 rounded-full border border-wheat hover:border-moss text-bark/60 hover:text-moss transition-colors flex items-center justify-center"
+      className="shrink-0 w-10 h-10 rounded-full border border-fence hover:border-gold text-smoke hover:text-gold transition-colors flex items-center justify-center"
       aria-label="Share this maker"
       title={copied ? "Link copied!" : "Share"}
     >

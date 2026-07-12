@@ -40,7 +40,7 @@ export default function FeaturedManager({ sellers }: { sellers: Seller[] }) {
   }
 
   return (
-    <section className="bg-white rounded-2xl p-6 mb-6">
+    <section className="bg-linen rounded-2xl p-6 mb-6">
       <h2 className="text-lg text-bark mb-4" style={{ fontFamily: "var(--font-serif)" }}>
         Featured Placements ({featured.length}/{MAX_FEATURED} slots)
       </h2>
@@ -50,7 +50,7 @@ export default function FeaturedManager({ sellers }: { sellers: Seller[] }) {
       ) : (
         <div className="space-y-3 mb-4">
           {featured.map((seller) => (
-            <div key={seller.id} className="flex items-center justify-between gap-3 p-3 bg-cream rounded-xl">
+            <div key={seller.id} className="flex items-center justify-between gap-3 p-3 bg-lamp rounded-xl">
               <div>
                 <p className="font-medium text-bark text-sm">{seller.name}</p>
                 <p className="text-bark/50 text-xs">{seller.location_label} · {seller.categories.join(", ")}</p>
@@ -58,7 +58,7 @@ export default function FeaturedManager({ sellers }: { sellers: Seller[] }) {
               <button
                 onClick={() => handleRemove(seller.id)}
                 disabled={loadingId === seller.id}
-                className="text-xs text-clay hover:text-bark disabled:opacity-50 transition-colors"
+                className="text-xs text-flame hover:text-bark disabled:opacity-50 transition-colors"
               >
                 {loadingId === seller.id ? "…" : "Remove"}
               </button>
@@ -68,13 +68,13 @@ export default function FeaturedManager({ sellers }: { sellers: Seller[] }) {
       )}
 
       {featured.length < MAX_FEATURED && eligible.length > 0 && (
-        <div className="border-t border-wheat pt-4">
+        <div className="border-t border-fence pt-4">
           <p className="text-xs font-medium text-bark/50 mb-3 uppercase tracking-wide">
             Add a featured seller ({MAX_FEATURED - featured.length} slot{MAX_FEATURED - featured.length !== 1 ? "s" : ""} open)
           </p>
           <div className="space-y-2">
             {eligible.map((seller) => (
-              <div key={seller.id} className="flex items-center justify-between gap-3 p-3 border border-wheat rounded-xl">
+              <div key={seller.id} className="flex items-center justify-between gap-3 p-3 border border-fence rounded-xl">
                 <div>
                   <p className="font-medium text-bark text-sm">{seller.name}</p>
                   <p className="text-bark/50 text-xs">{seller.location_label} · {seller.categories.join(", ")}</p>
@@ -82,7 +82,7 @@ export default function FeaturedManager({ sellers }: { sellers: Seller[] }) {
                 <button
                   onClick={() => handleAdd(seller.id)}
                   disabled={addingId === seller.id}
-                  className="text-xs text-moss hover:text-bark disabled:opacity-50 font-medium transition-colors"
+                  className="text-xs text-flamelo hover:text-bark disabled:opacity-50 font-medium transition-colors"
                 >
                   {addingId === seller.id ? "…" : "+ Feature"}
                 </button>

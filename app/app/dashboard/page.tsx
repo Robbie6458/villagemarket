@@ -21,18 +21,18 @@ export default async function DashboardPage() {
 
   if (!seller) {
     return (
-      <div className="min-h-screen bg-mist">
+      <div className="min-h-screen bg-lamp">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 py-10">
           <div className="flex items-center justify-between mb-8">
             <div>
-              <p className="text-sage text-xs font-medium tracking-widest uppercase mb-1">
+              <p className="text-gold text-xs font-medium tracking-widest uppercase mb-1">
                 Seller Dashboard
               </p>
               <p className="text-bark/50 text-sm">{user.email}</p>
             </div>
             <SignOutButtonClient />
           </div>
-          <div className="bg-white rounded-2xl p-8 text-center">
+          <div className="bg-linen rounded-2xl p-8 text-center">
             <h1
               className="text-2xl text-bark mb-3"
               style={{ fontFamily: "var(--font-serif)" }}
@@ -57,12 +57,12 @@ export default async function DashboardPage() {
     .order("created_at", { ascending: false });
 
   return (
-    <div className="min-h-screen bg-mist">
+    <div className="min-h-screen bg-lamp">
       <div className="max-w-2xl mx-auto px-4 sm:px-6 py-10">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <p className="text-sage text-xs font-medium tracking-widest uppercase mb-1">
+            <p className="text-gold text-xs font-medium tracking-widest uppercase mb-1">
               Seller Dashboard
             </p>
             <h1

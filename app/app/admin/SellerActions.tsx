@@ -20,7 +20,7 @@ export default function SellerActions({ sellerId }: { sellerId: string }) {
     }
   }
 
-  if (sent) return <span className="text-xs text-moss">Sent!</span>;
+  if (sent) return <span className="text-xs text-flamelo">Sent!</span>;
 
   return (
     <button

@@ -42,6 +42,7 @@ export interface Seller {
   contact_email?: string;
   instagram_url?: string;
   website_url?: string;
+  fulfillment_preferences?: string;
   products: Product[];
 }
 

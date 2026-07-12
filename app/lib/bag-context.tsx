@@ -21,6 +21,7 @@ export interface BagItem {
   sellerSlug: string;
   sellerName: string;
   sellerAcceptedPayments: string[];
+  sellerFulfillment?: string;
 }
 
 interface BagContextValue {

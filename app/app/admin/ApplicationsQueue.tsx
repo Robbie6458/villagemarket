@@ -53,7 +53,7 @@ export default function ApplicationsQueue({
   }
 
   return (
-    <section className="bg-white rounded-2xl p-6 mb-6">
+    <section className="bg-linen rounded-2xl p-6 mb-6">
       <h2 className="text-lg text-bark mb-4" style={{ fontFamily: "var(--font-serif)" }}>
         Pending Applications ({applications.length})
       </h2>
@@ -61,7 +61,7 @@ export default function ApplicationsQueue({
       {applications.length === 0 ? (
         <p className="text-bark/40 text-sm py-4">No pending applications</p>
       ) : (
-        <div className="divide-y divide-wheat">
+        <div className="divide-y divide-fence">
           {applications.map((app) => {
             const isExpanded = expanded === app.id;
             const action = loading[app.id];
@@ -72,11 +72,11 @@ export default function ApplicationsQueue({
                   <div className="flex-1 min-w-0">
                     <div className="flex flex-wrap items-center gap-2 mb-1">
                       <span className="font-medium text-bark text-sm">{app.name}</span>
-                      <span className="text-xs text-sage bg-cream px-2 py-0.5 rounded-full">
+                      <span className="text-xs text-gold bg-lamp px-2 py-0.5 rounded-full">
                         {app.location}
                       </span>
                       {app.categories.map((c) => (
-                        <span key={c} className="text-xs text-moss bg-moss/10 px-2 py-0.5 rounded-full">
+                        <span key={c} className="text-xs text-flamelo bg-gold/15 px-2 py-0.5 rounded-full">
                           {c}
                         </span>
                       ))}
@@ -94,7 +94,7 @@ export default function ApplicationsQueue({
                       </p>
                       <button
                         onClick={() => setExpanded(isExpanded ? null : app.id)}
-                        className="text-xs text-moss hover:underline"
+                        className="text-xs text-flamelo hover:underline"
                       >
                         {isExpanded ? "Less" : "Full details"}
                       </button>
@@ -105,14 +105,14 @@ export default function ApplicationsQueue({
                     <button
                       onClick={() => handleApprove(app.id)}
                       disabled={!!action}
-                      className="bg-moss text-white text-xs font-medium px-3 py-1.5 rounded-full hover:bg-bark disabled:opacity-50 transition-colors"
+                      className="bg-flame text-white text-xs font-medium px-3 py-1.5 rounded-full hover:bg-bark disabled:opacity-50 transition-colors"
                     >
                       {action === "approving" ? "Approving…" : "Approve"}
                     </button>
                     <button
                       onClick={() => handleReject(app.id)}
                       disabled={!!action}
-                      className="border border-wheat text-bark/60 text-xs font-medium px-3 py-1.5 rounded-full hover:border-clay hover:text-clay disabled:opacity-50 transition-colors"
+                      className="border border-fence text-bark/60 text-xs font-medium px-3 py-1.5 rounded-full hover:border-flame hover:text-flame disabled:opacity-50 transition-colors"
                     >
                       {action === "rejecting" ? "Rejecting…" : "Reject"}
                     </button>
@@ -120,7 +120,7 @@ export default function ApplicationsQueue({
                 </div>
 
                 {isExpanded && (
-                  <div className="mt-4 bg-cream rounded-xl p-4 text-xs space-y-2 text-bark/70">
+                  <div className="mt-4 bg-lamp rounded-xl p-4 text-xs space-y-2 text-bark/70">
                     <p><span className="font-medium text-bark">Email:</span> {app.email}</p>
                     {app.experience && (
                       <p><span className="font-medium text-bark">Experience:</span> {app.experience}</p>

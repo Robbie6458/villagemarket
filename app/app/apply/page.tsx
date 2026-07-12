@@ -59,7 +59,7 @@ export default function ApplyPage() {
 
   if (status === "error") {
     return (
-      <div className="min-h-screen bg-mist flex items-center justify-center px-4">
+      <div className="min-h-screen bg-lamp flex items-center justify-center px-4">
         <div className="max-w-md text-center">
           <h1 className="text-2xl text-bark mb-3" style={{ fontFamily: "var(--font-serif)" }}>
             Something went wrong
@@ -69,7 +69,7 @@ export default function ApplyPage() {
           </p>
           <button
             onClick={() => setStatus("idle")}
-            className="text-moss font-medium hover:underline text-sm"
+            className="text-flamelo font-medium hover:underline text-sm"
           >
             ← Try again
           </button>
@@ -80,10 +80,10 @@ export default function ApplyPage() {
 
   if (status === "success") {
     return (
-      <div className="min-h-screen bg-mist flex items-center justify-center px-4">
+      <div className="min-h-screen bg-lamp flex items-center justify-center px-4">
         <div className="max-w-md text-center">
-          <div className="w-16 h-16 bg-moss/10 rounded-full flex items-center justify-center mx-auto mb-6">
-            <svg className="w-8 h-8 text-moss" viewBox="0 0 20 20" fill="currentColor">
+          <div className="w-16 h-16 bg-gold/15 rounded-full flex items-center justify-center mx-auto mb-6">
+            <svg className="w-8 h-8 text-flamelo" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
             </svg>
           </div>
@@ -93,7 +93,7 @@ export default function ApplyPage() {
           <p className="text-bark/60 leading-relaxed mb-6">
             Thank you for applying to Village Market. Every application is reviewed personally — you&apos;ll hear back within a few days.
           </p>
-          <a href="/" className="text-moss font-medium hover:underline text-sm">
+          <a href="/" className="text-flamelo font-medium hover:underline text-sm">
             ← Back to the market
           </a>
         </div>
@@ -102,11 +102,11 @@ export default function ApplyPage() {
   }
 
   return (
-    <div className="min-h-screen bg-mist">
+    <div className="min-h-screen bg-lamp">
       <div className="max-w-2xl mx-auto px-4 sm:px-6 py-12">
         {/* Header */}
         <div className="mb-10">
-          <p className="text-sage text-sm font-medium tracking-widest uppercase mb-2">Join Village Market</p>
+          <p className="text-gold text-sm font-medium tracking-widest uppercase mb-2">Join Village Market</p>
           <h1 className="text-4xl text-bark mb-3" style={{ fontFamily: "var(--font-serif)" }}>
             Apply to Sell
           </h1>
@@ -117,17 +117,17 @@ export default function ApplyPage() {
         </div>
 
         {/* Founding Maker callout */}
-        <div className="bg-clay/10 border border-clay/20 rounded-2xl p-5 mb-8">
-          <p className="text-clay font-medium text-sm mb-1">🌟 Founding Maker Offer</p>
+        <div className="bg-flame/10 border border-flame/20 rounded-2xl p-5 mb-8">
+          <p className="text-flame font-medium text-sm mb-1">🌟 Founding Maker Offer</p>
           <p className="text-bark/70 text-sm leading-relaxed">
-            The first 10 approved sellers join as Founding Makers — the $50 onboarding fee is waived and
+            The first 5 approved sellers join as Founding Makers — the $50 onboarding fee is waived and
             you receive a permanent Founding Maker badge on your storefront.
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Personal info */}
-          <div className="bg-white rounded-2xl p-6 space-y-4">
+          <div className="bg-linen rounded-2xl p-6 space-y-4">
             <h2 className="text-base font-medium text-bark">About You</h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -139,12 +139,12 @@ export default function ApplyPage() {
 
             <div>
               <label className="block text-sm font-medium text-bark mb-1.5">
-                Neighborhood <span className="text-clay">*</span>
+                Neighborhood <span className="text-flame">*</span>
               </label>
               <select
                 name="location"
                 required
-                className="w-full px-3 py-2.5 border border-wheat rounded-xl text-bark bg-white focus:outline-none focus:border-moss focus:ring-1 focus:ring-moss text-sm"
+                className="w-full px-3 py-2.5 border border-fence rounded-xl text-bark bg-linen focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold text-sm"
               >
                 <option value="">Select your area</option>
                 {NEIGHBORHOODS.map((n) => (
@@ -155,12 +155,12 @@ export default function ApplyPage() {
           </div>
 
           {/* What you make */}
-          <div className="bg-white rounded-2xl p-6 space-y-4">
+          <div className="bg-linen rounded-2xl p-6 space-y-4">
             <h2 className="text-base font-medium text-bark">What You Make</h2>
 
             <div>
               <label className="block text-sm font-medium text-bark mb-2">
-                Categories <span className="text-clay">*</span>
+                Categories <span className="text-flame">*</span>
               </label>
               <div className="flex flex-wrap gap-2">
                 {CATEGORIES.map((cat) => (
@@ -170,8 +170,8 @@ export default function ApplyPage() {
                     onClick={() => toggleCategory(cat)}
                     className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
                       selectedCategories.includes(cat)
-                        ? "bg-moss text-white"
-                        : "bg-cream text-bark hover:border-moss border border-wheat"
+                        ? "bg-flame text-white"
+                        : "bg-lamp text-bark hover:border-gold border border-fence"
                     }`}
                   >
                     {cat}
@@ -182,14 +182,14 @@ export default function ApplyPage() {
 
             <div>
               <label className="block text-sm font-medium text-bark mb-1.5">
-                Tell us about what you make <span className="text-clay">*</span>
+                Tell us about what you make <span className="text-flame">*</span>
               </label>
               <textarea
                 name="description"
                 required
                 rows={4}
                 placeholder="What do you make or grow? What makes it special? What's your process?"
-                className="w-full px-3 py-2.5 border border-wheat rounded-xl text-bark placeholder-bark/35 focus:outline-none focus:border-moss focus:ring-1 focus:ring-moss text-sm resize-none"
+                className="w-full px-3 py-2.5 border border-fence rounded-xl text-bark placeholder-smoke/60 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold text-sm resize-none"
               />
             </div>
 
@@ -197,7 +197,7 @@ export default function ApplyPage() {
               <label className="block text-sm font-medium text-bark mb-1.5">Experience</label>
               <select
                 name="experience"
-                className="w-full px-3 py-2.5 border border-wheat rounded-xl text-bark bg-white focus:outline-none focus:border-moss focus:ring-1 focus:ring-moss text-sm"
+                className="w-full px-3 py-2.5 border border-fence rounded-xl text-bark bg-linen focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold text-sm"
               >
                 <option value="">How long have you been making this?</option>
                 <option value="less-than-1">Less than a year</option>
@@ -216,7 +216,7 @@ export default function ApplyPage() {
           </div>
 
           {/* Selling details */}
-          <div className="bg-white rounded-2xl p-6 space-y-4">
+          <div className="bg-linen rounded-2xl p-6 space-y-4">
             <h2 className="text-base font-medium text-bark">Selling Details</h2>
 
             <div>
@@ -229,8 +229,8 @@ export default function ApplyPage() {
                     onClick={() => togglePayment(method)}
                     className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
                       selectedPayments.includes(method)
-                        ? "bg-moss text-white"
-                        : "bg-cream text-bark border border-wheat hover:border-moss"
+                        ? "bg-flame text-white"
+                        : "bg-lamp text-bark border border-fence hover:border-gold"
                     }`}
                   >
                     {method}
@@ -244,10 +244,10 @@ export default function ApplyPage() {
                 <div
                   onClick={() => setDeliveryAvailable(!deliveryAvailable)}
                   className={`w-10 h-6 rounded-full transition-colors relative cursor-pointer ${
-                    deliveryAvailable ? "bg-moss" : "bg-wheat"
+                    deliveryAvailable ? "bg-gold" : "bg-fence"
                   }`}
                 >
-                  <span className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-transform ${deliveryAvailable ? "translate-x-5" : "translate-x-1"}`} />
+                  <span className={`absolute top-1 w-4 h-4 rounded-full bg-linen shadow transition-transform ${deliveryAvailable ? "translate-x-5" : "translate-x-1"}`} />
                 </div>
                 <span className="text-sm text-bark">I offer local delivery</span>
               </label>
@@ -266,7 +266,7 @@ export default function ApplyPage() {
           </div>
 
           {/* Referral */}
-          <div className="bg-white rounded-2xl p-6">
+          <div className="bg-linen rounded-2xl p-6">
             <Field
               label="How did you hear about Village Market?"
               name="referral_source"
@@ -278,7 +278,7 @@ export default function ApplyPage() {
           <button
             type="submit"
             disabled={status === "submitting"}
-            className="w-full bg-bark hover:bg-moss disabled:bg-bark/40 text-cream font-medium py-3.5 rounded-full transition-colors text-sm"
+            className="w-full bg-bark hover:bg-flamelo disabled:bg-bark/40 text-cream font-medium py-3.5 rounded-full transition-colors text-sm"
           >
             {status === "submitting" ? "Submitting…" : "Submit Application"}
           </button>
@@ -301,14 +301,14 @@ function Field({
   return (
     <div>
       <label className="block text-sm font-medium text-bark mb-1.5">
-        {label} {required && <span className="text-clay">*</span>}
+        {label} {required && <span className="text-flame">*</span>}
       </label>
       <input
         type={type}
         name={name}
         required={required}
         placeholder={placeholder}
-        className="w-full px-3 py-2.5 border border-wheat rounded-xl text-bark placeholder-bark/35 focus:outline-none focus:border-moss focus:ring-1 focus:ring-moss text-sm bg-white"
+        className="w-full px-3 py-2.5 border border-fence rounded-xl text-bark placeholder-smoke/60 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold text-sm bg-linen"
       />
     </div>
   );

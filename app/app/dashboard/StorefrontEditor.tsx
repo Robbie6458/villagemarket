@@ -27,6 +27,7 @@ type Seller = {
   onboarding_paid: boolean;
   instagram_url: string | null;
   website_url: string | null;
+  fulfillment_preferences: string | null;
 };
 
 export default function StorefrontEditor({ seller }: { seller: Seller }) {
@@ -45,6 +46,7 @@ export default function StorefrontEditor({ seller }: { seller: Seller }) {
   const [profileUrl, setProfileUrl] = useState(seller.profile_photo_url);
   const [instagram, setInstagram] = useState(seller.instagram_url ?? "");
   const [website, setWebsite] = useState(seller.website_url ?? "");
+  const [fulfillment, setFulfillment] = useState(seller.fulfillment_preferences ?? "");
 
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -125,6 +127,7 @@ export default function StorefrontEditor({ seller }: { seller: Seller }) {
         profile_photo_url: profileUrl,
         instagram_url: instagram,
         website_url: website,
+        fulfillment_preferences: fulfillment,
       });
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
@@ -174,8 +177,8 @@ export default function StorefrontEditor({ seller }: { seller: Seller }) {
     <div className="space-y-6">
       {/* Onboarding fee gate */}
       {!seller.onboarding_paid && (
-        <div className="bg-clay/10 border border-clay/30 rounded-2xl p-5">
-          <p className="font-medium text-clay text-sm mb-1">One-time setup fee required</p>
+        <div className="bg-flame/10 border border-flame/30 rounded-2xl p-5">
+          <p className="font-medium text-flame text-sm mb-1">One-time setup fee required</p>
           <p className="text-bark/60 text-xs leading-relaxed mb-4">
             A one-time $50 market fee unlocks your ability to go live. This keeps Village Market
             independent, ad-free, and personally curated — no ongoing charges, ever.
@@ -186,7 +189,7 @@ export default function StorefrontEditor({ seller }: { seller: Seller }) {
                 href={onboardingPayUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-clay hover:bg-bark text-white text-sm font-medium px-5 py-2 rounded-full transition-colors"
+                className="bg-flame hover:bg-flamelo text-white text-sm font-medium px-5 py-2 rounded-full transition-colors"
               >
                 Pay $50 setup fee →
               </a>
@@ -210,9 +213,9 @@ export default function StorefrontEditor({ seller }: { seller: Seller }) {
 
       {/* Go live banner */}
       {!seller.is_active && (
-        <div className="bg-clay/10 border border-clay/20 rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="bg-flame/10 border border-flame/20 rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <p className="font-medium text-clay text-sm mb-0.5">Your storefront is not live yet</p>
+            <p className="font-medium text-flame text-sm mb-0.5">Your storefront is not live yet</p>
             <p className="text-bark/60 text-xs">
               Fill in your tagline, bio, and at least one product, then go live to appear in the market.
             </p>
@@ -221,7 +224,7 @@ export default function StorefrontEditor({ seller }: { seller: Seller }) {
             onClick={handleGoLive}
             disabled={goingLive || !seller.onboarding_paid}
             title={!seller.onboarding_paid ? "Complete setup fee to go live" : undefined}
-            className="shrink-0 bg-moss hover:bg-bark disabled:opacity-40 disabled:cursor-not-allowed text-cream font-medium px-5 py-2 rounded-full text-sm transition-colors"
+            className="shrink-0 bg-gold hover:bg-goldsoft disabled:opacity-40 disabled:cursor-not-allowed text-ember font-medium px-5 py-2 rounded-full text-sm transition-colors"
           >
             {goingLive ? "Going live…" : "Go Live"}
           </button>
@@ -229,10 +232,10 @@ export default function StorefrontEditor({ seller }: { seller: Seller }) {
       )}
 
       {seller.is_active && (
-        <div className="bg-moss/10 border border-moss/20 rounded-2xl p-4 flex items-center justify-between gap-4">
+        <div className="bg-gold/15 border border-gold/20 rounded-2xl p-4 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-2 h-2 rounded-full bg-moss shrink-0" />
-            <p className="text-moss text-sm font-medium">
+            <div className="w-2 h-2 rounded-full bg-gold shrink-0" />
+            <p className="text-flamelo text-sm font-medium">
               Your storefront is live —{" "}
               <a href={`/sellers/${seller.slug}`} target="_blank" className="underline">
                 view it
@@ -242,7 +245,7 @@ export default function StorefrontEditor({ seller }: { seller: Seller }) {
           <button
             onClick={handleGoOffline}
             disabled={goingOffline}
-            className="shrink-0 text-xs text-bark/50 hover:text-clay disabled:opacity-50 border border-bark/20 hover:border-clay/40 px-3 py-1.5 rounded-full transition-colors"
+            className="shrink-0 text-xs text-bark/50 hover:text-flame disabled:opacity-50 border border-bark/20 hover:border-flame/40 px-3 py-1.5 rounded-full transition-colors"
           >
             {goingOffline ? "Pausing…" : "Pause store"}
           </button>
@@ -251,7 +254,7 @@ export default function StorefrontEditor({ seller }: { seller: Seller }) {
 
       {/* Share storefront */}
       {seller.is_active && (
-        <section className="bg-white rounded-2xl p-6">
+        <section className="bg-linen rounded-2xl p-6">
           <h2 className="text-base font-medium text-bark mb-1">Share Your Storefront</h2>
           <p className="text-bark/55 text-xs mb-4">
             Print the QR code for your market booth, or share the link on your own social media.
@@ -259,14 +262,14 @@ export default function StorefrontEditor({ seller }: { seller: Seller }) {
           <div className="flex flex-col sm:flex-row gap-5 items-start">
             {qrDataUrl && (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={qrDataUrl} alt="QR code linking to your storefront" className="w-28 h-28 rounded-lg border border-wheat shrink-0" />
+              <img src={qrDataUrl} alt="QR code linking to your storefront" className="w-28 h-28 rounded-lg border border-fence shrink-0" />
             )}
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 bg-cream rounded-xl px-3 py-2.5 mb-2">
+              <div className="flex items-center gap-2 bg-lamp rounded-xl px-3 py-2.5 mb-2">
                 <span className="text-bark/70 text-xs truncate flex-1">{storefrontUrl}</span>
                 <button
                   onClick={handleCopyLink}
-                  className="shrink-0 text-xs font-medium text-moss hover:underline"
+                  className="shrink-0 text-xs font-medium text-flamelo hover:underline"
                 >
                   {copied ? "Copied!" : "Copy link"}
                 </button>
@@ -286,7 +289,7 @@ export default function StorefrontEditor({ seller }: { seller: Seller }) {
       )}
 
       {/* Photos */}
-      <section className="bg-white rounded-2xl p-6">
+      <section className="bg-linen rounded-2xl p-6">
         <h2 className="text-base font-medium text-bark mb-4">Photos</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {/* Cover photo */}
@@ -294,7 +297,7 @@ export default function StorefrontEditor({ seller }: { seller: Seller }) {
             <p className="text-xs font-medium text-bark mb-2">Cover photo</p>
             <div
               onClick={() => coverInputRef.current?.click()}
-              className="relative h-32 rounded-xl overflow-hidden bg-cream border border-wheat cursor-pointer hover:border-moss transition-colors"
+              className="relative h-32 rounded-xl overflow-hidden bg-lamp border border-fence cursor-pointer hover:border-gold transition-colors"
             >
               {coverUrl ? (
                 <img src={coverUrl} alt="Cover" className="w-full h-full object-cover" />
@@ -304,7 +307,7 @@ export default function StorefrontEditor({ seller }: { seller: Seller }) {
                 </div>
               )}
               {uploadingCover && (
-                <div className="absolute inset-0 bg-white/70 flex items-center justify-center text-xs text-bark/60">
+                <div className="absolute inset-0 bg-linen/70 flex items-center justify-center text-xs text-bark/60">
                   Uploading…
                 </div>
               )}
@@ -332,7 +335,7 @@ export default function StorefrontEditor({ seller }: { seller: Seller }) {
             <p className="text-xs font-medium text-bark mb-2">Profile photo</p>
             <div
               onClick={() => profileInputRef.current?.click()}
-              className="relative h-32 rounded-xl overflow-hidden bg-cream border border-wheat cursor-pointer hover:border-moss transition-colors"
+              className="relative h-32 rounded-xl overflow-hidden bg-lamp border border-fence cursor-pointer hover:border-gold transition-colors"
             >
               {profileUrl ? (
                 <img src={profileUrl} alt="Profile" className="w-full h-full object-cover" />
@@ -342,7 +345,7 @@ export default function StorefrontEditor({ seller }: { seller: Seller }) {
                 </div>
               )}
               {uploadingProfile && (
-                <div className="absolute inset-0 bg-white/70 flex items-center justify-center text-xs text-bark/60">
+                <div className="absolute inset-0 bg-linen/70 flex items-center justify-center text-xs text-bark/60">
                   Uploading…
                 </div>
               )}
@@ -368,7 +371,7 @@ export default function StorefrontEditor({ seller }: { seller: Seller }) {
       </section>
 
       {/* Storefront info */}
-      <section className="bg-white rounded-2xl p-6 space-y-4">
+      <section className="bg-linen rounded-2xl p-6 space-y-4">
         <h2 className="text-base font-medium text-bark">Your Story</h2>
 
         <div>
@@ -377,7 +380,7 @@ export default function StorefrontEditor({ seller }: { seller: Seller }) {
             value={tagline}
             onChange={(e) => setTagline(e.target.value)}
             placeholder="One sentence that captures what you make"
-            className="w-full px-3 py-2.5 border border-wheat rounded-xl text-bark placeholder-bark/35 focus:outline-none focus:border-moss focus:ring-1 focus:ring-moss text-sm"
+            className="w-full px-3 py-2.5 border border-fence rounded-xl text-bark placeholder-smoke/60 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold text-sm"
           />
         </div>
 
@@ -388,7 +391,7 @@ export default function StorefrontEditor({ seller }: { seller: Seller }) {
             onChange={(e) => setBio(e.target.value)}
             rows={5}
             placeholder="Tell your story — who you are, how you got here, what makes your work special"
-            className="w-full px-3 py-2.5 border border-wheat rounded-xl text-bark placeholder-bark/35 focus:outline-none focus:border-moss focus:ring-1 focus:ring-moss text-sm resize-none"
+            className="w-full px-3 py-2.5 border border-fence rounded-xl text-bark placeholder-smoke/60 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold text-sm resize-none"
           />
         </div>
 
@@ -397,7 +400,7 @@ export default function StorefrontEditor({ seller }: { seller: Seller }) {
           <select
             value={location}
             onChange={(e) => setLocation(e.target.value)}
-            className="w-full px-3 py-2.5 border border-wheat rounded-xl text-bark bg-white focus:outline-none focus:border-moss focus:ring-1 focus:ring-moss text-sm"
+            className="w-full px-3 py-2.5 border border-fence rounded-xl text-bark bg-linen focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold text-sm"
           >
             {NEIGHBORHOODS.map((n) => (
               <option key={n} value={n}>{n}</option>
@@ -414,7 +417,7 @@ export default function StorefrontEditor({ seller }: { seller: Seller }) {
               value={instagram}
               onChange={(e) => setInstagram(e.target.value)}
               placeholder="https://instagram.com/yourshop"
-              className="w-full px-3 py-2.5 border border-wheat rounded-xl text-bark placeholder-bark/35 focus:outline-none focus:border-moss focus:ring-1 focus:ring-moss text-sm"
+              className="w-full px-3 py-2.5 border border-fence rounded-xl text-bark placeholder-smoke/60 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold text-sm"
             />
           </div>
           <div>
@@ -425,14 +428,14 @@ export default function StorefrontEditor({ seller }: { seller: Seller }) {
               value={website}
               onChange={(e) => setWebsite(e.target.value)}
               placeholder="https://yourshop.com"
-              className="w-full px-3 py-2.5 border border-wheat rounded-xl text-bark placeholder-bark/35 focus:outline-none focus:border-moss focus:ring-1 focus:ring-moss text-sm"
+              className="w-full px-3 py-2.5 border border-fence rounded-xl text-bark placeholder-smoke/60 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold text-sm"
             />
           </div>
         </div>
       </section>
 
       {/* Settings */}
-      <section className="bg-white rounded-2xl p-6 space-y-5">
+      <section className="bg-linen rounded-2xl p-6 space-y-5">
         <h2 className="text-base font-medium text-bark">Settings</h2>
 
         {/* Toggles */}
@@ -446,9 +449,9 @@ export default function StorefrontEditor({ seller }: { seller: Seller }) {
               <span className="text-sm text-bark">{label}</span>
               <div
                 onClick={() => set(!value)}
-                className={`w-10 h-6 rounded-full transition-colors relative ${value ? "bg-moss" : "bg-wheat"}`}
+                className={`w-10 h-6 rounded-full transition-colors relative ${value ? "bg-gold" : "bg-fence"}`}
               >
-                <span className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-transform ${value ? "translate-x-5" : "translate-x-1"}`} />
+                <span className={`absolute top-1 w-4 h-4 rounded-full bg-linen shadow transition-transform ${value ? "translate-x-5" : "translate-x-1"}`} />
               </div>
             </label>
           ))}
@@ -464,7 +467,7 @@ export default function StorefrontEditor({ seller }: { seller: Seller }) {
                 type="number"
                 value={radius}
                 onChange={(e) => setRadius(parseInt(e.target.value) || 0)}
-                className="w-full px-3 py-2.5 border border-wheat rounded-xl text-bark focus:outline-none focus:border-moss focus:ring-1 focus:ring-moss text-sm"
+                className="w-full px-3 py-2.5 border border-fence rounded-xl text-bark focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold text-sm"
               />
             </div>
             <div className="grid grid-cols-2 gap-3">
@@ -481,7 +484,7 @@ export default function StorefrontEditor({ seller }: { seller: Seller }) {
                     value={deliveryFee}
                     onChange={(e) => setDeliveryFee(e.target.value)}
                     placeholder="0.00"
-                    className="w-full pl-7 pr-3 py-2.5 border border-wheat rounded-xl text-bark focus:outline-none focus:border-moss focus:ring-1 focus:ring-moss text-sm"
+                    className="w-full pl-7 pr-3 py-2.5 border border-fence rounded-xl text-bark focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold text-sm"
                   />
                 </div>
               </div>
@@ -493,12 +496,26 @@ export default function StorefrontEditor({ seller }: { seller: Seller }) {
                   value={deliveryFeeLabel}
                   onChange={(e) => setDeliveryFeeLabel(e.target.value)}
                   placeholder="e.g. free over $50"
-                  className="w-full px-3 py-2.5 border border-wheat rounded-xl text-bark placeholder-bark/35 focus:outline-none focus:border-moss focus:ring-1 focus:ring-moss text-sm"
+                  className="w-full px-3 py-2.5 border border-fence rounded-xl text-bark placeholder-smoke/60 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold text-sm"
                 />
               </div>
             </div>
           </div>
         )}
+
+        {/* Order fulfillment preferences */}
+        <div>
+          <label className="block text-xs font-medium text-bark mb-1.5">
+            How you fulfill orders <span className="font-normal text-bark/40">(shown on your storefront and in the buyer&apos;s bag)</span>
+          </label>
+          <textarea
+            value={fulfillment}
+            onChange={(e) => setFulfillment(e.target.value)}
+            rows={3}
+            placeholder="e.g. I prefer pickup in Post Falls, but I deliver within 15 miles on Mondays and Wednesdays. Message me to arrange a time."
+            className="w-full px-3 py-2.5 border border-fence rounded-xl text-bark placeholder-smoke/60 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold text-sm resize-none"
+          />
+        </div>
 
         {/* Payment methods */}
         <div>
@@ -511,8 +528,8 @@ export default function StorefrontEditor({ seller }: { seller: Seller }) {
                 onClick={() => togglePayment(method)}
                 className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
                   payments.includes(method)
-                    ? "bg-moss text-white"
-                    : "bg-cream text-bark border border-wheat hover:border-moss"
+                    ? "bg-flame text-white"
+                    : "bg-lamp text-bark border border-fence hover:border-gold"
                 }`}
               >
                 {method}
@@ -530,7 +547,7 @@ export default function StorefrontEditor({ seller }: { seller: Seller }) {
             value={barter}
             onChange={(e) => setBarter(e.target.value)}
             placeholder="e.g. Fresh produce, quality tools, handmade goods"
-            className="w-full px-3 py-2.5 border border-wheat rounded-xl text-bark placeholder-bark/35 focus:outline-none focus:border-moss focus:ring-1 focus:ring-moss text-sm"
+            className="w-full px-3 py-2.5 border border-fence rounded-xl text-bark placeholder-smoke/60 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold text-sm"
           />
         </div>
       </section>
@@ -540,16 +557,16 @@ export default function StorefrontEditor({ seller }: { seller: Seller }) {
         <button
           onClick={handleSave}
           disabled={saving}
-          className="bg-bark hover:bg-moss disabled:opacity-50 text-cream font-medium px-6 py-2.5 rounded-full text-sm transition-colors"
+          className="bg-bark hover:bg-flamelo disabled:opacity-50 text-cream font-medium px-6 py-2.5 rounded-full text-sm transition-colors"
         >
           {saving ? "Saving…" : "Save changes"}
         </button>
-        {saved && <p className="text-moss text-sm">Saved</p>}
+        {saved && <p className="text-flamelo text-sm">Saved</p>}
       </div>
 
       {/* Support the Market */}
       {seller.onboarding_paid && (
-        <section className="bg-cream rounded-2xl p-6 border border-wheat">
+        <section className="bg-lamp rounded-2xl p-6 border border-fence">
           <h2 className="text-base font-medium text-bark mb-1">Support the Market ♡</h2>
           <p className="text-bark/60 text-sm leading-relaxed mb-5">
             Village Market is ad-free, algorithm-free, and independently run.
@@ -558,7 +575,7 @@ export default function StorefrontEditor({ seller }: { seller: Seller }) {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {/* One-time */}
-            <div className="bg-white rounded-xl p-4 border border-wheat/60">
+            <div className="bg-linen rounded-xl p-4 border border-fence/60">
               <p className="text-xs font-medium text-bark mb-1">One-time contribution</p>
               <p className="text-xs text-bark/50 leading-relaxed mb-3">
                 Pay what feels right, whenever it feels right. No strings attached.
@@ -568,7 +585,7 @@ export default function StorefrontEditor({ seller }: { seller: Seller }) {
                   href={tipUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block border border-sage/50 hover:border-sage text-sage text-xs font-medium px-4 py-1.5 rounded-full transition-colors"
+                  className="inline-block border border-gold/50 hover:border-gold text-gold text-xs font-medium px-4 py-1.5 rounded-full transition-colors"
                 >
                   Tip the Village →
                 </a>
@@ -578,7 +595,7 @@ export default function StorefrontEditor({ seller }: { seller: Seller }) {
             </div>
 
             {/* Recurring */}
-            <div className="bg-white rounded-xl p-4 border border-wheat/60">
+            <div className="bg-linen rounded-xl p-4 border border-fence/60">
               <p className="text-xs font-medium text-bark mb-1">Monthly supporter</p>
               <p className="text-xs text-bark/50 leading-relaxed mb-3">
                 A small monthly contribution to keep the lights on. Cancel anytime, no questions asked.
@@ -588,7 +605,7 @@ export default function StorefrontEditor({ seller }: { seller: Seller }) {
                   href={recurringUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block border border-moss/40 hover:border-moss text-moss text-xs font-medium px-4 py-1.5 rounded-full transition-colors"
+                  className="inline-block border border-gold/40 hover:border-gold text-flamelo text-xs font-medium px-4 py-1.5 rounded-full transition-colors"
                 >
                   Become a supporter →
                 </a>

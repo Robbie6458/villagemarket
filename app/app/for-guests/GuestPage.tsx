@@ -62,22 +62,20 @@ export default function GuestPage({
   const { isLocal, status, prompt } = useGeo();
 
   return (
-    <div className="min-h-screen bg-mist">
+    <div className="min-h-screen bg-lamp">
       {/* Hero */}
-      <section className="bg-moss text-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
-          <p className="text-sage text-sm font-medium tracking-widest uppercase mb-3">
+      <section className="relative bg-ember overflow-hidden">
+        <div className="absolute inset-0 ember-glow opacity-70" />
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
+          <p className="text-gold text-xs font-medium tracking-[0.24em] uppercase mb-4" style={{ fontFamily: "var(--font-mono)" }}>
             A Village Collective Welcome
           </p>
-          <h1
-            className="text-4xl md:text-5xl text-white mb-4 leading-tight"
-            style={{ fontFamily: "var(--font-serif)" }}
-          >
+          <h1 className="font-display text-4xl md:text-5xl text-linen mb-4 leading-tight">
             These are your neighbors
             <br />
-            <em>for the week.</em>
+            <em className="text-gold" style={{ fontStyle: "italic" }}>for the week.</em>
           </h1>
-          <p className="text-white/75 text-lg leading-relaxed max-w-xl">
+          <p className="text-linen/65 text-lg leading-relaxed max-w-xl">
             Village Market is your local insider — connecting you with North Idaho makers, growers,
             and crafters who live here year-round. Think of it as a personal recommendation from
             your host.
@@ -88,14 +86,14 @@ export default function GuestPage({
       {/* Geo banner */}
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
         {status === "checking" && (
-          <div className="bg-wheat rounded-2xl p-4 flex items-center gap-3">
-            <div className="w-4 h-4 border-2 border-bark/30 border-t-moss rounded-full animate-spin shrink-0" />
+          <div className="bg-fence rounded-2xl p-4 flex items-center gap-3">
+            <div className="w-4 h-4 border-2 border-bark/30 border-t-gold rounded-full animate-spin shrink-0" />
             <p className="text-bark/70 text-sm">Checking your location to unlock messaging…</p>
           </div>
         )}
         {status !== "checking" && isLocal && (
-          <div className="bg-moss/10 border border-moss/20 rounded-2xl p-4 flex items-center gap-3">
-            <span className="w-8 h-8 bg-moss rounded-full flex items-center justify-center shrink-0 text-white text-sm">✓</span>
+          <div className="bg-gold/15 border border-gold/30 rounded-2xl p-4 flex items-center gap-3">
+            <span className="w-8 h-8 bg-gold rounded-full flex items-center justify-center shrink-0 text-ember text-sm">✓</span>
             <div>
               <p className="font-medium text-bark text-sm">Welcome to North Idaho — full access unlocked.</p>
               <p className="text-bark/60 text-xs mt-0.5">You can message any maker directly from their page.</p>
@@ -103,7 +101,7 @@ export default function GuestPage({
           </div>
         )}
         {status !== "checking" && !isLocal && (
-          <div className="bg-cream border border-wheat rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center gap-3">
+          <div className="bg-lamp border border-fence rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center gap-3">
             <div className="flex-1">
               <p className="font-medium text-bark text-sm">Unlock direct messaging</p>
               <p className="text-bark/60 text-xs mt-0.5">
@@ -112,7 +110,7 @@ export default function GuestPage({
             </div>
             <button
               onClick={prompt}
-              className="shrink-0 bg-moss text-white text-sm font-medium px-4 py-2 rounded-full hover:bg-bark transition-colors"
+              className="shrink-0 bg-flame text-white text-sm font-medium px-4 py-2 rounded-full hover:bg-bark transition-colors"
             >
               Allow location
             </button>
@@ -133,16 +131,16 @@ export default function GuestPage({
               <Link
                 key={p.question}
                 href={p.href}
-                className="group bg-white rounded-2xl p-5 hover:shadow-md transition-all hover:-translate-y-0.5 block"
+                className="group bg-linen rounded-2xl p-5 hover:shadow-md transition-all hover:-translate-y-0.5 block"
               >
                 <div className="flex items-start gap-3">
                   <span className="text-2xl mt-0.5 shrink-0">{p.icon}</span>
                   <div>
-                    <p className="font-medium text-bark text-sm leading-snug mb-1 group-hover:text-moss transition-colors">
+                    <p className="font-medium text-bark text-sm leading-snug mb-1 group-hover:text-flamelo transition-colors">
                       {p.question}
                     </p>
                     <p className="text-bark/55 text-xs leading-relaxed mb-2">{p.answer}</p>
-                    <span className="text-xs text-moss font-medium">{p.cta} →</span>
+                    <span className="text-xs text-flamelo font-medium">{p.cta} →</span>
                   </div>
                 </div>
               </Link>
@@ -153,7 +151,7 @@ export default function GuestPage({
         {/* Order before you arrive */}
         {deliverySellers.length > 0 && (
           <section className="bg-bark rounded-2xl p-8 text-cream">
-            <p className="text-sage text-xs font-medium tracking-widest uppercase mb-2">Pro tip</p>
+            <p className="text-gold text-xs font-medium tracking-widest uppercase mb-2">Pro tip</p>
             <h2 className="text-2xl mb-3" style={{ fontFamily: "var(--font-serif)" }}>
               Order before you arrive
             </h2>
@@ -169,7 +167,7 @@ export default function GuestPage({
             </div>
             <Link
               href="/?deliveryOnly=true"
-              className="inline-block bg-cream text-bark text-sm font-medium px-5 py-2.5 rounded-full hover:bg-wheat transition-colors"
+              className="inline-block bg-lamp text-bark text-sm font-medium px-5 py-2.5 rounded-full hover:bg-fence transition-colors"
             >
               See all delivery makers
             </Link>
@@ -183,7 +181,7 @@ export default function GuestPage({
               <h2 className="text-2xl text-bark" style={{ fontFamily: "var(--font-serif)" }}>
                 Available right now
               </h2>
-              <Link href="/?availableNow=true" className="text-xs text-moss font-medium hover:underline">
+              <Link href="/?availableNow=true" className="text-xs text-flamelo font-medium hover:underline">
                 See all →
               </Link>
             </div>
@@ -198,8 +196,8 @@ export default function GuestPage({
 
         {/* Custom orders / take home a memory */}
         {customSellers.length > 0 && (
-          <section className="bg-cream rounded-2xl p-8">
-            <p className="text-sage text-xs font-medium tracking-widest uppercase mb-2">Take home a memory</p>
+          <section className="bg-lamp rounded-2xl p-8">
+            <p className="text-gold text-xs font-medium tracking-widest uppercase mb-2">Take home a memory</p>
             <h2 className="text-2xl text-bark mb-3" style={{ fontFamily: "var(--font-serif)" }}>
               Custom made while you&apos;re here
             </h2>
@@ -215,7 +213,7 @@ export default function GuestPage({
             </div>
             <Link
               href="/?customOrdersOnly=true"
-              className="inline-block bg-bark text-cream text-sm font-medium px-5 py-2.5 rounded-full hover:bg-moss transition-colors"
+              className="inline-block bg-bark text-cream text-sm font-medium px-5 py-2.5 rounded-full hover:bg-flamelo transition-colors"
             >
               Browse custom order makers
             </Link>
@@ -223,9 +221,9 @@ export default function GuestPage({
         )}
 
         {/* VC link */}
-        <section className="bg-white rounded-2xl p-8 flex flex-col sm:flex-row items-center gap-6">
+        <section className="bg-linen rounded-2xl p-8 flex flex-col sm:flex-row items-center gap-6">
           <div className="flex-1">
-            <p className="text-sage text-xs font-medium tracking-widest uppercase mb-2">Need a place to stay?</p>
+            <p className="text-gold text-xs font-medium tracking-widest uppercase mb-2">Need a place to stay?</p>
             <h2 className="text-xl text-bark mb-2" style={{ fontFamily: "var(--font-serif)" }}>
               Village Collective Rentals
             </h2>
@@ -238,7 +236,7 @@ export default function GuestPage({
             href="https://village-collective.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="shrink-0 bg-bark hover:bg-moss text-cream text-sm font-medium px-6 py-3 rounded-full transition-colors"
+            className="shrink-0 bg-bark hover:bg-flamelo text-cream text-sm font-medium px-6 py-3 rounded-full transition-colors"
           >
             Browse rentals ↗
           </a>

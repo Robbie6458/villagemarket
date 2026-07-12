@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 @theme {
-  /* Brand palette */
-  --color-bark:    #2C2417;
+  /* ── Legacy warm palette (kept so un-migrated pages keep working) ── */
+  --color-bark:    #241C15;
   --color-moss:    #3D5A3E;
   --color-sage:    #7A9E7E;
   --color-cream:   #F5F0E8;
@@ -11,11 +11,29 @@
   --color-clay-lt: #D9A07A;
   --color-mist:    #F9F6F0;
 
-  /* Typography */
-  --font-serif: var(--font-playfair), Georgia, "Times New Roman", serif;
-  --font-sans:  var(--font-dm-sans), system-ui, -apple-system, sans-serif;
+  /* ── Fireside palette ──
+     The night market: dark warm air, gold firelight, warm-lit stalls. */
+  --color-ember:    #17120E; /* deepest night — nav, hero, footer            */
+  --color-char:     #241C15; /* elevated dark surface — cards on the night   */
+  --color-ash:      #3A2E23; /* hairline / border on dark                    */
+  --color-gold:     #E8A020; /* flame — primary accent, eyebrows, links      */
+  --color-goldsoft: #F2C879; /* soft firelight — muted gold text             */
+  --color-flame:    #F26B21; /* the hottest ember — reserved for buy actions */
+  --color-flamelo:  #D2551A; /* ember hover                                  */
+  --color-lamp:     #ECE3D1; /* warm lamplight — the lit market floor        */
+  --color-linen:    #FBF6EC; /* card surface on the lamp-lit floor           */
+  --color-fence:    #DDCDB0; /* warm hairline / border on light              */
+  --color-smoke:    #8A7B66; /* muted warm text on light                     */
 
-  /* Spacing */
+  /* ── Typography ──
+     Fraunces = the craft/story voice (names, headlines).
+     DM Sans  = the reading voice (descriptions, UI).
+     Spline Sans Mono = the ledger voice (prices, miles, dates, payment). */
+  --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  --font-serif:   var(--font-fraunces), Georgia, "Times New Roman", serif;
+  --font-sans:    var(--font-dm-sans), system-ui, -apple-system, sans-serif;
+  --font-mono:    var(--font-spline-mono), ui-monospace, "SF Mono", monospace;
+
   --spacing-section: 5rem;
 }
 
@@ -23,14 +41,39 @@
 html { scroll-behavior: smooth; }
 
 body {
-  background-color: #F9F6F0;
-  color: #2C2417;
+  background-color: var(--color-lamp);
+  color: var(--color-bark);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
 }
 
 h1, h2, h3 {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
+}
+
+/* Fraunces with optical sizing for warm, characterful display */
+.font-display {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+}
+
+/* Ember glow — the warm halo behind firelit elements */
+.ember-glow {
+  background:
+    radial-gradient(60% 80% at 50% 30%, rgba(242, 107, 33, 0.22) 0%, transparent 60%),
+    radial-gradient(90% 100% at 50% 100%, rgba(232, 160, 32, 0.16) 0%, transparent 55%);
+}
+
+/* Firelight flicker for the campfire mark — subtle, respects reduced motion */
+@keyframes flicker {
+  0%, 100% { opacity: 1;    filter: drop-shadow(0 0 6px rgba(242, 107, 33, 0.45)); }
+  50%      { opacity: 0.92; filter: drop-shadow(0 0 10px rgba(242, 107, 33, 0.65)); }
+}
+.flicker { animation: flicker 3.5s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .flicker { animation: none; }
+  html { scroll-behavior: auto; }
 }
 
 /* Utility: hide scrollbar but allow scroll */

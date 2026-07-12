@@ -16,7 +16,7 @@ const RADIUS_KM = 80;
 const CACHE_KEY = "vm_geo";
 const TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
 
-function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number) {
+export function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number) {
   const R = 6371;
   const dLat = ((lat2 - lat1) * Math.PI) / 180;
   const dLng = ((lng2 - lng1) * Math.PI) / 180;
@@ -28,31 +28,41 @@ function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number) {
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
+export interface Coords {
+  lat: number;
+  lng: number;
+}
+
 interface GeoCache {
   status: "local" | "visitor";
+  coords?: Coords;
   expiry: number;
 }
 
 interface GeoContextValue {
   status: GeoStatus;
   isLocal: boolean;
+  coords: Coords | null;
   prompt: () => void;
 }
 
 const GeoContext = createContext<GeoContextValue>({
   status: "checking",
   isLocal: false,
+  coords: null,
   prompt: () => {},
 });
 
 export function GeoProvider({ children }: { children: ReactNode }) {
   const [status, setStatus] = useState<GeoStatus>("checking");
+  const [coords, setCoords] = useState<Coords | null>(null);
 
-  const resolve = (result: "local" | "visitor") => {
-    const cache: GeoCache = { status: result, expiry: Date.now() + TTL_MS };
+  const resolve = (result: "local" | "visitor", pos?: Coords) => {
+    const cache: GeoCache = { status: result, coords: pos, expiry: Date.now() + TTL_MS };
     try {
       localStorage.setItem(CACHE_KEY, JSON.stringify(cache));
     } catch {}
+    if (pos) setCoords(pos);
     setStatus(result);
   };
 
@@ -63,13 +73,9 @@ export function GeoProvider({ children }: { children: ReactNode }) {
     }
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        const km = haversineKm(
-          pos.coords.latitude,
-          pos.coords.longitude,
-          CDA_LAT,
-          CDA_LNG
-        );
-        resolve(km <= RADIUS_KM ? "local" : "visitor");
+        const here = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+        const km = haversineKm(here.lat, here.lng, CDA_LAT, CDA_LNG);
+        resolve(km <= RADIUS_KM ? "local" : "visitor", here);
       },
       () => resolve("visitor"),
       { timeout: 8000 }
@@ -82,6 +88,7 @@ export function GeoProvider({ children }: { children: ReactNode }) {
       if (raw) {
         const cache: GeoCache = JSON.parse(raw);
         if (cache.expiry > Date.now()) {
+          if (cache.coords) setCoords(cache.coords);
           setStatus(cache.status);
           return;
         }
@@ -92,7 +99,7 @@ export function GeoProvider({ children }: { children: ReactNode }) {
 
   return (
     <GeoContext.Provider
-      value={{ status, isLocal: status === "local", prompt: requestLocation }}
+      value={{ status, isLocal: status === "local", coords, prompt: requestLocation }}
     >
       {children}
     </GeoContext.Provider>

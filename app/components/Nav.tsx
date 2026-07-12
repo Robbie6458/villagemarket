@@ -5,6 +5,26 @@ import { useState, useEffect } from "react";
 import { useGeo } from "@/lib/geo-context";
 import { useBag } from "@/lib/bag-context";
 import { createClient } from "@/lib/supabase/client";
+import Campfire from "./Campfire";
+
+function BagIcon({ count, className = "" }: { count: number; className?: string }) {
+  return (
+    <Link
+      href="/bag"
+      className={`relative text-goldsoft hover:text-gold transition-colors ${className}`}
+      aria-label={count > 0 ? `View bag, ${count} items` : "View bag"}
+    >
+      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 11H4L5 9z" />
+      </svg>
+      {count > 0 && (
+        <span className="absolute -top-1.5 -right-1.5 bg-flame text-ember text-[10px] font-semibold w-4 h-4 rounded-full flex items-center justify-center" style={{ fontFamily: "var(--font-mono)" }}>
+          {count}
+        </span>
+      )}
+    </Link>
+  );
+}
 
 export default function Nav() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -28,69 +48,66 @@ export default function Nav() {
     : { href: "/seller/login", label: "Seller Sign In" };
 
   return (
-    <header className="sticky top-0 z-50 bg-bark shadow-md">
+    <header className="sticky top-0 z-50 bg-ember border-b border-ash/70">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <Link href="/" className="flex flex-col leading-none">
-            <span className="text-sage text-[10px] font-medium tracking-widest uppercase">
-              A Village Collective Project
-            </span>
-            <span className="text-cream text-xl tracking-tight" style={{ fontFamily: "var(--font-serif)" }}>
-              Village Market
+          {/* Wordmark — campfire mark ties us to Village Collective */}
+          <Link href="/" className="flex items-center gap-2.5 group">
+            <Campfire flicker className="w-8 h-8 shrink-0" />
+            <span className="flex flex-col leading-none">
+              <span className="text-gold/70 text-[9px] font-medium tracking-[0.22em] uppercase mb-0.5" style={{ fontFamily: "var(--font-sans)" }}>
+                A Village Collective Project
+              </span>
+              <span className="text-linen text-[19px] tracking-tight font-display leading-none">
+                Village <span className="text-gold">Market</span>
+              </span>
             </span>
           </Link>
 
-          <nav className="hidden md:flex items-center gap-6">
-            <Link href="/" className="text-wheat hover:text-white text-sm font-medium transition-colors">Browse</Link>
-            <Link href="/for-guests" className="text-wheat hover:text-white text-sm font-medium transition-colors">For Guests</Link>
-            <Link href="/barter" className="text-wheat hover:text-white text-sm font-medium transition-colors">Barter</Link>
-            <Link href={sellerLink.href} className="text-wheat/60 hover:text-white text-sm transition-colors">
+          {/* Desktop nav */}
+          <nav className="hidden md:flex items-center gap-7">
+            <Link href="/" className="text-linen/80 hover:text-gold text-sm transition-colors">Browse</Link>
+            <Link href="/for-guests" className="text-linen/80 hover:text-gold text-sm transition-colors">For Guests</Link>
+            <Link href="/barter" className="text-linen/80 hover:text-gold text-sm transition-colors">Barter</Link>
+            <Link href={sellerLink.href} className="text-linen/45 hover:text-gold text-sm transition-colors">
               {sellerLink.label}
             </Link>
-            <Link href="/apply" className="bg-clay hover:bg-clay-lt text-white text-sm font-medium px-4 py-2 rounded-full transition-colors">
+            <Link href="/apply" className="border border-gold/50 text-gold hover:bg-gold hover:text-ember text-sm font-medium px-4 py-1.5 rounded-full transition-colors">
               Apply to Sell
             </Link>
-            <Link href="/bag" className="relative text-wheat hover:text-white transition-colors" aria-label="View bag">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 11H4L5 9z" />
-              </svg>
-              {count > 0 && (
-                <span className="absolute -top-2 -right-2 bg-clay text-white text-[10px] font-medium w-4 h-4 rounded-full flex items-center justify-center">
-                  {count}
-                </span>
-              )}
-            </Link>
+            <BagIcon count={count} />
             {status !== "checking" && (
-              <span className="flex items-center gap-1.5 text-xs text-sage">
-                <span className={`w-2 h-2 rounded-full ${isLocal ? "bg-sage" : "bg-clay"}`} />
-                {isLocal ? "Local access" : "Browse only"}
+              <span className="flex items-center gap-1.5 text-[11px] text-linen/40" style={{ fontFamily: "var(--font-mono)" }}>
+                <span className={`w-1.5 h-1.5 rounded-full ${isLocal ? "bg-gold" : "bg-flame"}`} />
+                {isLocal ? "LOCAL" : "BROWSING"}
               </span>
             )}
           </nav>
 
-          <button className="md:hidden text-wheat p-2" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              {menuOpen
-                ? <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                : <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              }
-            </svg>
-          </button>
+          {/* Mobile: bag always visible + hamburger */}
+          <div className="flex items-center gap-1 md:hidden">
+            <BagIcon count={count} className="p-2" />
+            <button className="text-linen p-2" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                {menuOpen
+                  ? <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M6 18L18 6M6 6l12 12" />
+                  : <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M4 6h16M4 12h16M4 18h16" />
+                }
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
 
       {menuOpen && (
-        <div className="md:hidden bg-bark border-t border-moss/30 px-4 py-4 flex flex-col gap-4">
-          <Link href="/" className="text-wheat text-base font-medium" onClick={() => setMenuOpen(false)}>Browse</Link>
-          <Link href="/for-guests" className="text-wheat text-base font-medium" onClick={() => setMenuOpen(false)}>For Guests</Link>
-          <Link href="/barter" className="text-wheat text-base font-medium" onClick={() => setMenuOpen(false)}>Barter</Link>
-          <Link href="/bag" className="text-wheat text-base font-medium" onClick={() => setMenuOpen(false)}>
-            Bag{count > 0 ? ` (${count})` : ""}
-          </Link>
-          <Link href={sellerLink.href} className="text-wheat/60 text-base" onClick={() => setMenuOpen(false)}>
+        <div className="md:hidden bg-ember border-t border-ash/70 px-4 py-5 flex flex-col gap-4">
+          <Link href="/" className="text-linen text-base" onClick={() => setMenuOpen(false)}>Browse</Link>
+          <Link href="/for-guests" className="text-linen text-base" onClick={() => setMenuOpen(false)}>For Guests</Link>
+          <Link href="/barter" className="text-linen text-base" onClick={() => setMenuOpen(false)}>Barter</Link>
+          <Link href={sellerLink.href} className="text-linen/50 text-base" onClick={() => setMenuOpen(false)}>
             {sellerLink.label}
           </Link>
-          <Link href="/apply" className="bg-clay text-white text-sm font-medium px-4 py-2 rounded-full text-center" onClick={() => setMenuOpen(false)}>
+          <Link href="/apply" className="border border-gold/50 text-gold text-sm font-medium px-4 py-2 rounded-full text-center" onClick={() => setMenuOpen(false)}>
             Apply to Sell
           </Link>
         </div>

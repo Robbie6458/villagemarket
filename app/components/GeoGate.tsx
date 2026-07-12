@@ -35,15 +35,15 @@ export function GeoBanner() {
   if (status === "checking" || isLocal) return null;
 
   return (
-    <div className="bg-wheat border-b border-clay/30">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-col sm:flex-row items-center justify-between gap-3">
-        <p className="text-sm text-bark text-center sm:text-left">
-          <span className="font-medium">You&apos;re browsing from outside the area.</span>{" "}
-          Visit North Idaho to unlock the ability to connect with local makers.
+    <div className="bg-char border-b border-ash/70">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex flex-col sm:flex-row items-center justify-between gap-2">
+        <p className="text-sm text-linen/75 text-center sm:text-left">
+          <span className="font-medium text-linen">You&apos;re browsing from outside the area.</span>{" "}
+          Visit North Idaho to connect with local makers.
         </p>
         <button
           onClick={prompt}
-          className="shrink-0 text-xs font-medium text-moss border border-moss px-3 py-1.5 rounded-full hover:bg-moss hover:text-white transition-colors"
+          className="shrink-0 text-xs font-medium text-gold border border-gold/40 px-3 py-1.5 rounded-full hover:bg-gold hover:text-ember transition-colors"
         >
           Re-check location
         </button>

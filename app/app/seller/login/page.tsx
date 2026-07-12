@@ -61,9 +61,9 @@ function SellerLoginForm() {
 
   if (magicSent) {
     return (
-      <div className="bg-white rounded-2xl shadow-sm p-8 w-full max-w-sm text-center">
-        <div className="w-12 h-12 bg-moss/10 rounded-full flex items-center justify-center mx-auto mb-4">
-          <svg className="w-6 h-6 text-moss" viewBox="0 0 20 20" fill="currentColor">
+      <div className="bg-linen rounded-2xl shadow-sm p-8 w-full max-w-sm text-center">
+        <div className="w-12 h-12 bg-gold/15 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg className="w-6 h-6 text-flamelo" viewBox="0 0 20 20" fill="currentColor">
             <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
             <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
           </svg>
@@ -85,7 +85,7 @@ function SellerLoginForm() {
   }
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm p-8 w-full max-w-sm">
+    <div className="bg-linen rounded-2xl shadow-sm p-8 w-full max-w-sm">
       <div className="mb-6">
         <h1 className="text-2xl text-bark mb-1" style={{ fontFamily: "var(--font-serif)" }}>
           Seller Sign In
@@ -94,12 +94,12 @@ function SellerLoginForm() {
       </div>
 
       {/* Mode toggle */}
-      <div className="flex bg-cream rounded-xl p-1 mb-5 gap-1">
+      <div className="flex bg-lamp rounded-xl p-1 mb-5 gap-1">
         <button
           type="button"
           onClick={() => { setMode("password"); setError(""); }}
           className={`flex-1 text-xs font-medium py-1.5 rounded-lg transition-colors ${
-            mode === "password" ? "bg-white text-bark shadow-sm" : "text-bark/50 hover:text-bark"
+            mode === "password" ? "bg-linen text-bark shadow-sm" : "text-bark/50 hover:text-bark"
           }`}
         >
           Password
@@ -108,7 +108,7 @@ function SellerLoginForm() {
           type="button"
           onClick={() => { setMode("magic"); setError(""); }}
           className={`flex-1 text-xs font-medium py-1.5 rounded-lg transition-colors ${
-            mode === "magic" ? "bg-white text-bark shadow-sm" : "text-bark/50 hover:text-bark"
+            mode === "magic" ? "bg-linen text-bark shadow-sm" : "text-bark/50 hover:text-bark"
           }`}
         >
           Email link
@@ -124,7 +124,7 @@ function SellerLoginForm() {
             onChange={(e) => setEmail(e.target.value)}
             required
             autoComplete="email"
-            className="w-full px-3 py-2.5 border border-wheat rounded-xl text-bark placeholder-bark/35 focus:outline-none focus:border-moss focus:ring-1 focus:ring-moss text-sm"
+            className="w-full px-3 py-2.5 border border-fence rounded-xl text-bark placeholder-smoke/60 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold text-sm"
           />
           <input
             type="password"
@@ -133,13 +133,13 @@ function SellerLoginForm() {
             onChange={(e) => setPassword(e.target.value)}
             required
             autoComplete="current-password"
-            className="w-full px-3 py-2.5 border border-wheat rounded-xl text-bark placeholder-bark/35 focus:outline-none focus:border-moss focus:ring-1 focus:ring-moss text-sm"
+            className="w-full px-3 py-2.5 border border-fence rounded-xl text-bark placeholder-smoke/60 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold text-sm"
           />
-          {error && <p className="text-clay text-sm">{error}</p>}
+          {error && <p className="text-flame text-sm">{error}</p>}
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-moss hover:bg-bark disabled:bg-moss/40 text-cream font-medium py-2.5 rounded-full transition-colors text-sm"
+            className="w-full bg-gold hover:bg-goldsoft disabled:bg-gold/40 text-ember font-medium py-2.5 rounded-full transition-colors text-sm"
           >
             {loading ? "Signing in…" : "Sign in"}
           </button>
@@ -148,7 +148,7 @@ function SellerLoginForm() {
             <button
               type="button"
               onClick={() => { setMode("magic"); setError(""); }}
-              className="text-moss hover:underline"
+              className="text-flamelo hover:underline"
             >
               Use an email link instead
             </button>
@@ -163,13 +163,13 @@ function SellerLoginForm() {
             onChange={(e) => setEmail(e.target.value)}
             required
             autoComplete="email"
-            className="w-full px-3 py-2.5 border border-wheat rounded-xl text-bark placeholder-bark/35 focus:outline-none focus:border-moss focus:ring-1 focus:ring-moss text-sm"
+            className="w-full px-3 py-2.5 border border-fence rounded-xl text-bark placeholder-smoke/60 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold text-sm"
           />
-          {error && <p className="text-clay text-sm">{error}</p>}
+          {error && <p className="text-flame text-sm">{error}</p>}
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-moss hover:bg-bark disabled:bg-moss/40 text-cream font-medium py-2.5 rounded-full transition-colors text-sm"
+            className="w-full bg-gold hover:bg-goldsoft disabled:bg-gold/40 text-ember font-medium py-2.5 rounded-full transition-colors text-sm"
           >
             {loading ? "Sending link…" : "Send sign-in link"}
           </button>
@@ -181,7 +181,7 @@ function SellerLoginForm() {
 
       <p className="text-center text-xs text-bark/40 mt-6">
         Not a seller yet?{" "}
-        <a href="/apply" className="text-moss hover:underline">
+        <a href="/apply" className="text-flamelo hover:underline">
           Apply to join
         </a>
       </p>
@@ -191,8 +191,8 @@ function SellerLoginForm() {
 
 export default function SellerLoginPage() {
   return (
-    <div className="min-h-screen bg-mist flex items-center justify-center px-4">
-      <Suspense fallback={<div className="bg-white rounded-2xl shadow-sm p-8 w-full max-w-sm h-64" />}>
+    <div className="min-h-screen bg-lamp flex items-center justify-center px-4">
+      <Suspense fallback={<div className="bg-linen rounded-2xl shadow-sm p-8 w-full max-w-sm h-64" />}>
         <SellerLoginForm />
       </Suspense>
     </div>

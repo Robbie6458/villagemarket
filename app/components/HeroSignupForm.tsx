@@ -28,9 +28,9 @@ export default function HeroSignupForm() {
 
   if (status === "sent") {
     return (
-      <div className="bg-white rounded-2xl shadow-sm p-7 text-center">
-        <div className="w-12 h-12 bg-moss/10 rounded-full flex items-center justify-center mx-auto mb-4">
-          <svg className="w-6 h-6 text-moss" viewBox="0 0 20 20" fill="currentColor">
+      <div className="bg-linen rounded-2xl shadow-sm p-7 text-center">
+        <div className="w-12 h-12 bg-gold/15 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg className="w-6 h-6 text-flamelo" viewBox="0 0 20 20" fill="currentColor">
             <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
           </svg>
         </div>
@@ -45,8 +45,8 @@ export default function HeroSignupForm() {
   }
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm p-7">
-      <p className="text-sage text-[10px] font-medium tracking-widest uppercase mb-1">Stay in the loop</p>
+    <div className="bg-linen rounded-2xl shadow-sm p-7">
+      <p className="text-gold text-[10px] font-medium tracking-widest uppercase mb-1">Stay in the loop</p>
       <h2 className="text-xl text-bark mb-1" style={{ fontFamily: "var(--font-serif)" }}>
         New makers, weekly.
       </h2>
@@ -63,7 +63,7 @@ export default function HeroSignupForm() {
               name="name"
               required
               placeholder="Sarah"
-              className="w-full px-3 py-2.5 border border-wheat rounded-xl text-bark placeholder-bark/35 focus:outline-none focus:border-moss focus:ring-1 focus:ring-moss text-sm bg-white"
+              className="w-full px-3 py-2.5 border border-fence rounded-xl text-bark placeholder-smoke/60 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold text-sm bg-linen"
             />
           </div>
           <div>
@@ -73,7 +73,7 @@ export default function HeroSignupForm() {
               name="email"
               required
               placeholder="you@email.com"
-              className="w-full px-3 py-2.5 border border-wheat rounded-xl text-bark placeholder-bark/35 focus:outline-none focus:border-moss focus:ring-1 focus:ring-moss text-sm bg-white"
+              className="w-full px-3 py-2.5 border border-fence rounded-xl text-bark placeholder-smoke/60 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold text-sm bg-linen"
             />
           </div>
         </div>
@@ -89,7 +89,7 @@ export default function HeroSignupForm() {
                 className={`py-2 rounded-xl text-sm font-medium border transition-colors ${
                   role === r
                     ? "bg-bark text-cream border-bark"
-                    : "bg-white text-bark/70 border-wheat hover:border-bark/30"
+                    : "bg-linen text-bark/70 border-fence hover:border-bark/30"
                 }`}
               >
                 {r === "buyer" ? "Buyer / Visitor" : "Local Maker"}
@@ -103,7 +103,7 @@ export default function HeroSignupForm() {
             type="checkbox"
             checked={isGuest}
             onChange={(e) => setIsGuest(e.target.checked)}
-            className="w-4 h-4 mt-0.5 rounded border-wheat accent-moss cursor-pointer shrink-0"
+            className="w-4 h-4 mt-0.5 rounded border-fence accent-flame cursor-pointer shrink-0"
           />
           <span className="text-sm text-bark/70 group-hover:text-bark transition-colors leading-snug">
             I&apos;m staying at a Village Collective rental
@@ -113,13 +113,13 @@ export default function HeroSignupForm() {
         <button
           type="submit"
           disabled={status === "submitting"}
-          className="w-full bg-moss hover:bg-bark disabled:bg-moss/40 text-white font-medium py-3 rounded-full transition-colors text-sm"
+          className="w-full bg-gold hover:bg-bark disabled:bg-gold/40 text-white font-medium py-3 rounded-full transition-colors text-sm"
         >
           {status === "submitting" ? "Signing up…" : "Get weekly updates"}
         </button>
 
         {status === "error" && (
-          <p className="text-clay text-xs text-center">
+          <p className="text-flame text-xs text-center">
             Something went wrong — please try again.
           </p>
         )}

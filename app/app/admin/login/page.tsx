@@ -53,8 +53,8 @@ export default function AdminLoginPage() {
 
   if (magicSent) {
     return (
-      <div className="min-h-screen bg-mist flex items-center justify-center px-4">
-        <div className="bg-white rounded-2xl shadow-sm p-8 w-full max-w-sm text-center">
+      <div className="min-h-screen bg-lamp flex items-center justify-center px-4">
+        <div className="bg-linen rounded-2xl shadow-sm p-8 w-full max-w-sm text-center">
           <h2 className="text-xl text-bark mb-2" style={{ fontFamily: "var(--font-serif)" }}>
             Check your email
           </h2>
@@ -73,19 +73,19 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-mist flex items-center justify-center px-4">
-      <div className="bg-white rounded-2xl shadow-sm p-8 w-full max-w-sm">
+    <div className="min-h-screen bg-lamp flex items-center justify-center px-4">
+      <div className="bg-linen rounded-2xl shadow-sm p-8 w-full max-w-sm">
         <h1 className="text-2xl text-bark mb-1" style={{ fontFamily: "var(--font-serif)" }}>
           Admin
         </h1>
         <p className="text-bark/50 text-sm mb-6">Village Market dashboard</p>
 
-        <div className="flex bg-cream rounded-xl p-1 mb-5 gap-1">
+        <div className="flex bg-lamp rounded-xl p-1 mb-5 gap-1">
           <button
             type="button"
             onClick={() => { setMode("password"); setError(""); }}
             className={`flex-1 text-xs font-medium py-1.5 rounded-lg transition-colors ${
-              mode === "password" ? "bg-white text-bark shadow-sm" : "text-bark/50 hover:text-bark"
+              mode === "password" ? "bg-linen text-bark shadow-sm" : "text-bark/50 hover:text-bark"
             }`}
           >
             Password
@@ -94,7 +94,7 @@ export default function AdminLoginPage() {
             type="button"
             onClick={() => { setMode("magic"); setError(""); }}
             className={`flex-1 text-xs font-medium py-1.5 rounded-lg transition-colors ${
-              mode === "magic" ? "bg-white text-bark shadow-sm" : "text-bark/50 hover:text-bark"
+              mode === "magic" ? "bg-linen text-bark shadow-sm" : "text-bark/50 hover:text-bark"
             }`}
           >
             Email link
@@ -110,7 +110,7 @@ export default function AdminLoginPage() {
               onChange={(e) => setEmail(e.target.value)}
               required
               autoComplete="email"
-              className="w-full px-3 py-2.5 border border-wheat rounded-xl text-bark placeholder-bark/35 focus:outline-none focus:border-moss focus:ring-1 focus:ring-moss text-sm"
+              className="w-full px-3 py-2.5 border border-fence rounded-xl text-bark placeholder-smoke/60 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold text-sm"
             />
             <input
               type="password"
@@ -119,13 +119,13 @@ export default function AdminLoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               required
               autoComplete="current-password"
-              className="w-full px-3 py-2.5 border border-wheat rounded-xl text-bark placeholder-bark/35 focus:outline-none focus:border-moss focus:ring-1 focus:ring-moss text-sm"
+              className="w-full px-3 py-2.5 border border-fence rounded-xl text-bark placeholder-smoke/60 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold text-sm"
             />
-            {error && <p className="text-clay text-sm">{error}</p>}
+            {error && <p className="text-flame text-sm">{error}</p>}
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-bark hover:bg-moss disabled:bg-bark/40 text-cream font-medium py-2.5 rounded-full transition-colors text-sm"
+              className="w-full bg-bark hover:bg-flamelo disabled:bg-bark/40 text-cream font-medium py-2.5 rounded-full transition-colors text-sm"
             >
               {loading ? "Signing in…" : "Sign in"}
             </button>
@@ -139,13 +139,13 @@ export default function AdminLoginPage() {
               onChange={(e) => setEmail(e.target.value)}
               required
               autoComplete="email"
-              className="w-full px-3 py-2.5 border border-wheat rounded-xl text-bark placeholder-bark/35 focus:outline-none focus:border-moss focus:ring-1 focus:ring-moss text-sm"
+              className="w-full px-3 py-2.5 border border-fence rounded-xl text-bark placeholder-smoke/60 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold text-sm"
             />
-            {error && <p className="text-clay text-sm">{error}</p>}
+            {error && <p className="text-flame text-sm">{error}</p>}
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-bark hover:bg-moss disabled:bg-bark/40 text-cream font-medium py-2.5 rounded-full transition-colors text-sm"
+              className="w-full bg-bark hover:bg-flamelo disabled:bg-bark/40 text-cream font-medium py-2.5 rounded-full transition-colors text-sm"
             >
               {loading ? "Sending…" : "Send sign-in link"}
             </button>

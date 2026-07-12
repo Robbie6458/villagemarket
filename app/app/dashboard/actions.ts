@@ -34,6 +34,7 @@ export async function updateStorefront(data: {
   profile_photo_url?: string;
   instagram_url?: string;
   website_url?: string;
+  fulfillment_preferences?: string;
 }) {
   const sellerId = await getCurrentSellerId();
   const supabase = await createClient();

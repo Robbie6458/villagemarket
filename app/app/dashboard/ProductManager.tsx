@@ -198,7 +198,7 @@ export default function ProductManager({
   }
 
   return (
-    <section className="bg-white rounded-2xl p-6">
+    <section className="bg-linen rounded-2xl p-6">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-base font-medium text-bark">
           Products ({products.length})
@@ -206,7 +206,7 @@ export default function ProductManager({
         {!showForm && (
           <button
             onClick={openNew}
-            className="bg-moss hover:bg-bark text-cream text-xs font-medium px-4 py-1.5 rounded-full transition-colors"
+            className="bg-gold hover:bg-goldsoft text-ember text-xs font-medium px-4 py-1.5 rounded-full transition-colors"
           >
             + Add product
           </button>
@@ -215,7 +215,7 @@ export default function ProductManager({
 
       {/* Product form */}
       {showForm && (
-        <div className="bg-cream rounded-xl p-5 mb-5 space-y-4">
+        <div className="bg-lamp rounded-xl p-5 mb-5 space-y-4">
           <h3 className="text-sm font-medium text-bark">
             {editingId ? "Edit product" : "New product"}
           </h3>
@@ -226,7 +226,7 @@ export default function ProductManager({
               <input
                 value={form.title}
                 onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
-                className="w-full px-3 py-2 border border-wheat rounded-xl text-bark text-sm focus:outline-none focus:border-moss"
+                className="w-full px-3 py-2 border border-fence rounded-xl text-bark text-sm focus:outline-none focus:border-gold"
               />
             </div>
 
@@ -236,7 +236,7 @@ export default function ProductManager({
                 value={form.description}
                 onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
                 rows={3}
-                className="w-full px-3 py-2 border border-wheat rounded-xl text-bark text-sm focus:outline-none focus:border-moss resize-none"
+                className="w-full px-3 py-2 border border-fence rounded-xl text-bark text-sm focus:outline-none focus:border-gold resize-none"
               />
             </div>
 
@@ -247,7 +247,7 @@ export default function ProductManager({
                 step="0.01"
                 value={form.price}
                 onChange={(e) => setForm((f) => ({ ...f, price: e.target.value }))}
-                className="w-full px-3 py-2 border border-wheat rounded-xl text-bark text-sm focus:outline-none focus:border-moss"
+                className="w-full px-3 py-2 border border-fence rounded-xl text-bark text-sm focus:outline-none focus:border-gold"
               />
             </div>
 
@@ -259,7 +259,7 @@ export default function ProductManager({
                 value={form.price_label}
                 onChange={(e) => setForm((f) => ({ ...f, price_label: e.target.value }))}
                 placeholder="per dozen, per lb, each…"
-                className="w-full px-3 py-2 border border-wheat rounded-xl text-bark text-sm placeholder-bark/35 focus:outline-none focus:border-moss"
+                className="w-full px-3 py-2 border border-fence rounded-xl text-bark text-sm placeholder-smoke/60 focus:outline-none focus:border-gold"
               />
             </div>
 
@@ -268,7 +268,7 @@ export default function ProductManager({
               <select
                 value={form.category}
                 onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))}
-                className="w-full px-3 py-2 border border-wheat rounded-xl text-bark bg-white text-sm focus:outline-none focus:border-moss"
+                className="w-full px-3 py-2 border border-fence rounded-xl text-bark bg-linen text-sm focus:outline-none focus:border-gold"
               >
                 {CATEGORIES.map((c) => (
                   <option key={c} value={c}>{c}</option>
@@ -281,7 +281,7 @@ export default function ProductManager({
               <select
                 value={form.availability_status}
                 onChange={(e) => setForm((f) => ({ ...f, availability_status: e.target.value }))}
-                className="w-full px-3 py-2 border border-wheat rounded-xl text-bark bg-white text-sm focus:outline-none focus:border-moss"
+                className="w-full px-3 py-2 border border-fence rounded-xl text-bark bg-linen text-sm focus:outline-none focus:border-gold"
               >
                 {AVAILABILITY.map((a) => (
                   <option key={a.value} value={a.value}>{a.label}</option>
@@ -297,9 +297,9 @@ export default function ProductManager({
                     if (highlightCapReached && !form.is_highlighted) return;
                     setForm((f) => ({ ...f, is_highlighted: !f.is_highlighted }));
                   }}
-                  className={`w-9 h-5 rounded-full transition-colors relative shrink-0 ${form.is_highlighted ? "bg-clay" : "bg-wheat"}`}
+                  className={`w-9 h-5 rounded-full transition-colors relative shrink-0 ${form.is_highlighted ? "bg-flame" : "bg-fence"}`}
                 >
-                  <span className={`absolute top-1 w-3 h-3 rounded-full bg-white shadow transition-transform ${form.is_highlighted ? "translate-x-4.5" : "translate-x-1"}`} />
+                  <span className={`absolute top-1 w-3 h-3 rounded-full bg-linen shadow transition-transform ${form.is_highlighted ? "translate-x-4.5" : "translate-x-1"}`} />
                 </div>
                 <span className="text-xs text-bark">
                   ⭐ Highlight as best seller
@@ -312,9 +312,9 @@ export default function ProductManager({
               <label className="flex items-center gap-2 cursor-pointer">
                 <div
                   onClick={() => setForm((f) => ({ ...f, restocking: !f.restocking }))}
-                  className={`w-9 h-5 rounded-full transition-colors relative shrink-0 ${form.restocking ? "bg-clay" : "bg-wheat"}`}
+                  className={`w-9 h-5 rounded-full transition-colors relative shrink-0 ${form.restocking ? "bg-flame" : "bg-fence"}`}
                 >
-                  <span className={`absolute top-1 w-3 h-3 rounded-full bg-white shadow transition-transform ${form.restocking ? "translate-x-4.5" : "translate-x-1"}`} />
+                  <span className={`absolute top-1 w-3 h-3 rounded-full bg-linen shadow transition-transform ${form.restocking ? "translate-x-4.5" : "translate-x-1"}`} />
                 </div>
                 <span className="text-xs text-bark">Restocking soon</span>
               </label>
@@ -331,10 +331,10 @@ export default function ProductManager({
                     <img
                       src={url}
                       alt=""
-                      className="w-16 h-16 rounded-lg object-cover border border-wheat"
+                      className="w-16 h-16 rounded-lg object-cover border border-fence"
                     />
                     {i === 0 && (
-                      <span className="absolute -top-1.5 -left-1.5 bg-moss text-white text-[9px] font-medium px-1.5 py-0.5 rounded-full">
+                      <span className="absolute -top-1.5 -left-1.5 bg-flame text-white text-[9px] font-medium px-1.5 py-0.5 rounded-full">
                         Cover
                       </span>
                     )}
@@ -351,7 +351,7 @@ export default function ProductManager({
                         <button
                           type="button"
                           onClick={() => movePhoto(i, -1)}
-                          className="w-4 h-4 rounded-full bg-white border border-wheat text-bark text-[9px] leading-none flex items-center justify-center"
+                          className="w-4 h-4 rounded-full bg-linen border border-fence text-bark text-[9px] leading-none flex items-center justify-center"
                           aria-label="Move left"
                         >
                           ‹
@@ -361,7 +361,7 @@ export default function ProductManager({
                         <button
                           type="button"
                           onClick={() => movePhoto(i, 1)}
-                          className="w-4 h-4 rounded-full bg-white border border-wheat text-bark text-[9px] leading-none flex items-center justify-center"
+                          className="w-4 h-4 rounded-full bg-linen border border-fence text-bark text-[9px] leading-none flex items-center justify-center"
                           aria-label="Move right"
                         >
                           ›
@@ -375,7 +375,7 @@ export default function ProductManager({
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
                     disabled={uploading}
-                    className="w-16 h-16 rounded-lg border border-dashed border-wheat text-bark/40 hover:border-moss hover:text-moss disabled:opacity-50 flex items-center justify-center text-xs transition-colors"
+                    className="w-16 h-16 rounded-lg border border-dashed border-fence text-bark/40 hover:border-gold hover:text-flamelo disabled:opacity-50 flex items-center justify-center text-xs transition-colors"
                   >
                     {uploading ? "…" : "+ Add"}
                   </button>
@@ -399,7 +399,7 @@ export default function ProductManager({
             <button
               onClick={handleSave}
               disabled={saving}
-              className="bg-bark hover:bg-moss disabled:opacity-50 text-cream text-xs font-medium px-4 py-2 rounded-full transition-colors"
+              className="bg-bark hover:bg-flamelo disabled:opacity-50 text-cream text-xs font-medium px-4 py-2 rounded-full transition-colors"
             >
               {saving ? "Saving…" : editingId ? "Save changes" : "Add product"}
             </button>
@@ -420,7 +420,7 @@ export default function ProductManager({
         </p>
       )}
 
-      <div className="divide-y divide-wheat">
+      <div className="divide-y divide-fence">
         {products.map((product) => (
           <div key={product.id} className={`py-3 flex items-center gap-3 ${!product.is_active ? "opacity-50" : ""}`}>
             {product.photo_urls.length > 0 && (
@@ -428,7 +428,7 @@ export default function ProductManager({
                 <img
                   src={product.photo_urls[0]}
                   alt={product.title}
-                  className="w-12 h-12 rounded-lg object-cover border border-wheat"
+                  className="w-12 h-12 rounded-lg object-cover border border-fence"
                 />
                 {product.photo_urls.length > 1 && (
                   <span className="absolute -bottom-1 -right-1 bg-bark text-white text-[9px] font-medium w-4 h-4 rounded-full flex items-center justify-center">
@@ -441,13 +441,13 @@ export default function ProductManager({
               <div className="flex items-center gap-2">
                 <p className="font-medium text-bark text-sm truncate">{product.title}</p>
                 {product.is_highlighted && (
-                  <span className="shrink-0 text-[10px] text-clay">⭐</span>
+                  <span className="shrink-0 text-[10px] text-flame">⭐</span>
                 )}
                 {product.restocking && (
-                  <span className="shrink-0 text-[10px] text-clay bg-clay/10 px-2 py-0.5 rounded-full">Restocking</span>
+                  <span className="shrink-0 text-[10px] text-flame bg-flame/10 px-2 py-0.5 rounded-full">Restocking</span>
                 )}
                 {!product.is_active && (
-                  <span className="shrink-0 text-[10px] text-bark/40 bg-wheat px-2 py-0.5 rounded-full">Hidden</span>
+                  <span className="shrink-0 text-[10px] text-bark/40 bg-fence px-2 py-0.5 rounded-full">Hidden</span>
                 )}
               </div>
               <p className="text-bark/50 text-xs">
@@ -460,7 +460,7 @@ export default function ProductManager({
             <div className="flex gap-3 shrink-0">
               <button
                 onClick={() => openEdit(product)}
-                className="text-xs text-moss hover:underline"
+                className="text-xs text-flamelo hover:underline"
               >
                 Edit
               </button>
@@ -474,7 +474,7 @@ export default function ProductManager({
               <button
                 onClick={() => handleDelete(product.id)}
                 disabled={deletingId === product.id}
-                className="text-xs text-bark/30 hover:text-clay disabled:opacity-50"
+                className="text-xs text-bark/30 hover:text-flame disabled:opacity-50"
               >
                 {deletingId === product.id ? "…" : "Delete"}
               </button>

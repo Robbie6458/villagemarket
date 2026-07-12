@@ -54,7 +54,7 @@ export default function ProductPhotoGallery({
                 key={i}
                 type="button"
                 onClick={(e) => { e.preventDefault(); setActive(i); }}
-                className={`w-1.5 h-1.5 rounded-full transition-colors ${i === active ? "bg-white" : "bg-white/40"}`}
+                className={`w-1.5 h-1.5 rounded-full transition-colors ${i === active ? "bg-linen" : "bg-linen/40"}`}
                 aria-label={`Photo ${i + 1}`}
               />
             ))}

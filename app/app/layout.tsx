@@ -1,15 +1,17 @@
 import type { Metadata } from "next";
-import { Playfair_Display, DM_Sans } from "next/font/google";
+import { Fraunces, DM_Sans, Spline_Sans_Mono } from "next/font/google";
 import "./globals.css";
 import { GeoProvider } from "@/lib/geo-context";
 import { BagProvider } from "@/lib/bag-context";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 
-const playfair = Playfair_Display({
-  variable: "--font-playfair",
+// Fraunces — the craft/story voice. Optical sizing + soft axis give it warmth
+// a default Playfair never has.
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
   subsets: ["latin"],
-  weight: ["400", "600"],
+  weight: ["400", "500", "600", "700", "900"],
   style: ["normal", "italic"],
   display: "swap",
 });
@@ -17,7 +19,15 @@ const playfair = Playfair_Display({
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
   subsets: ["latin"],
-  weight: ["300", "400", "500"],
+  weight: ["300", "400", "500", "600"],
+  display: "swap",
+});
+
+// Spline Sans Mono — the ledger voice: prices, mileage, dates, payment chips.
+const splineMono = Spline_Sans_Mono({
+  variable: "--font-spline-mono",
+  subsets: ["latin"],
+  weight: ["400", "500"],
   display: "swap",
 });
 
@@ -39,7 +49,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${playfair.variable} ${dmSans.variable}`}>
+    <html lang="en" className={`${fraunces.variable} ${dmSans.variable} ${splineMono.variable}`}>
       <body className="min-h-screen flex flex-col">
         <GeoProvider>
           <BagProvider>

@@ -14,8 +14,8 @@ export default function CategoryFilter({ selected, onChange }: CategoryFilterPro
         onClick={() => onChange(null)}
         className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-colors ${
           selected === null
-            ? "bg-moss text-white"
-            : "bg-white text-bark border border-wheat hover:border-moss"
+            ? "bg-ember text-gold"
+            : "bg-linen text-smoke border border-fence hover:border-gold/50"
         }`}
       >
         All
@@ -26,8 +26,8 @@ export default function CategoryFilter({ selected, onChange }: CategoryFilterPro
           onClick={() => onChange(cat === selected ? null : cat)}
           className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-colors ${
             selected === cat
-              ? "bg-moss text-white"
-              : "bg-white text-bark border border-wheat hover:border-moss"
+              ? "bg-ember text-gold"
+              : "bg-linen text-smoke border border-fence hover:border-gold/50"
           }`}
         >
           {cat}
