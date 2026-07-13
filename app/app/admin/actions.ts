@@ -27,43 +27,86 @@ export async function approveApplication(id: string) {
 
   if (fetchError || !app) throw new Error("Application not found");
 
-  // Create auth user + generate invite link in one step
-  // The invite link redirects to /auth/callback which sets the session and sends to /dashboard
-  const { data: linkData, error: linkError } =
-    await admin.auth.admin.generateLink({
-      type: "invite",
-      email: app.email,
-      options: {
-        redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback?next=/dashboard`,
-      },
-    });
+  // Generate the account-setup link. A brand-new email gets an invite; an email
+  // that already has an auth user (re-approval, or a repeat applicant) gets a
+  // set-password link instead — so approval never fails on "already registered".
+  const redirectTo = `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback?next=/dashboard`;
+  let userId: string;
+  let actionLink: string;
 
-  if (linkError) throw new Error(`Failed to generate invite link: ${linkError.message}`);
-
-  const authData = { user: linkData.user };
-
-  // Create a sellers row — inactive until they complete their storefront
-  const slug = generateSlug(app.name);
-  const { error: sellerError } = await admin.from("sellers").insert({
-    name: app.name,
-    slug,
-    tagline: "",
-    bio: "",
-    location_label: app.location,
-    lat: 47.6777, // CDA center — seller updates via dashboard
-    lng: -116.7805,
-    categories: app.categories,
-    accepted_payments: app.payment_methods,
-    delivery_available: app.delivery_available,
-    delivery_radius_miles: app.delivery_radius_miles,
-    contact_email: app.email,
-    auth_user_id: authData.user.id,
-    verified: true,
-    is_active: false,
-    approved_at: new Date().toISOString(),
+  const invite = await admin.auth.admin.generateLink({
+    type: "invite",
+    email: app.email,
+    options: { redirectTo },
   });
 
-  if (sellerError) throw new Error(`Failed to create seller: ${sellerError.message}`);
+  if (invite.error) {
+    if (!/already.*regist/i.test(invite.error.message)) {
+      throw new Error(`Failed to generate invite link: ${invite.error.message}`);
+    }
+    // Email already has an account — find it and send a set-password link.
+    const { data: list } = await admin.auth.admin.listUsers({ perPage: 200 });
+    const existing = list?.users.find(
+      (u) => u.email?.toLowerCase() === app.email.toLowerCase()
+    );
+    if (!existing) throw new Error("Account exists but could not be located to re-send setup.");
+    userId = existing.id;
+
+    const recovery = await admin.auth.admin.generateLink({
+      type: "recovery",
+      email: app.email,
+      options: { redirectTo },
+    });
+    if (recovery.error || !recovery.data.properties) {
+      throw new Error(`Failed to generate setup link: ${recovery.error?.message ?? "unknown"}`);
+    }
+    actionLink = recovery.data.properties.action_link;
+  } else {
+    userId = invite.data.user.id;
+    actionLink = invite.data.properties.action_link;
+  }
+
+  // Create a sellers row only if this user doesn't already have one (idempotent).
+  const { data: existingSeller } = await admin
+    .from("sellers")
+    .select("id")
+    .eq("auth_user_id", userId)
+    .maybeSingle();
+
+  if (!existingSeller) {
+    // Dedupe the slug so two makers with the same name don't collide.
+    const baseSlug = generateSlug(app.name);
+    let slug = baseSlug;
+    for (let n = 2; n < 50; n++) {
+      const { data: clash } = await admin
+        .from("sellers")
+        .select("id")
+        .eq("slug", slug)
+        .maybeSingle();
+      if (!clash) break;
+      slug = `${baseSlug}-${n}`;
+    }
+
+    const { error: sellerError } = await admin.from("sellers").insert({
+      name: app.name,
+      slug,
+      tagline: "",
+      bio: "",
+      location_label: app.location,
+      lat: 47.6777, // CDA center — seller updates via dashboard
+      lng: -116.7805,
+      categories: app.categories,
+      accepted_payments: app.payment_methods,
+      delivery_available: app.delivery_available,
+      delivery_radius_miles: app.delivery_radius_miles,
+      contact_email: app.email,
+      auth_user_id: userId,
+      verified: true,
+      is_active: false,
+      approved_at: new Date().toISOString(),
+    });
+    if (sellerError) throw new Error(`Failed to create seller: ${sellerError.message}`);
+  }
 
   // Update application status
   await admin
@@ -81,7 +124,7 @@ export async function approveApplication(id: string) {
       <p>Hi ${firstName},</p>
       <p>Great news — your application to sell on Village Market has been approved.</p>
       <p>Click the link below to set your password and access your seller dashboard, where you can set up your storefront, add products, and go live.</p>
-      <p><a href="${linkData.properties.action_link}">Set up your account →</a></p>
+      <p><a href="${actionLink}">Set up your account →</a></p>
       <p>This link expires in 24 hours. If you need a new one, just reply to this email.</p>
       <p>Welcome to the market.</p>
       <p>— The Village Market team</p>
