@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { Resend } from "resend";
+import { EMAIL_FROM } from "@/lib/email";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -50,7 +51,7 @@ export async function sendContactEmail(
     `;
 
   const { error } = await resend.emails.send({
-    from: "Village Market <onboarding@resend.dev>",
+    from: EMAIL_FROM,
     to: seller.contact_email,
     replyTo: data.fromEmail,
     subject,

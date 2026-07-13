@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { CATEGORIES, PAYMENT_METHODS, NEIGHBORHOODS } from "@/lib/types";
-import { createClient } from "@/lib/supabase/client";
+import { submitApplication } from "./actions";
 
 type FormStatus = "idle" | "submitting" | "success" | "error";
 
@@ -30,8 +30,7 @@ export default function ApplyPage() {
     const fname = data.get("fname") as string;
     const lname = data.get("lname") as string;
 
-    const supabase = createClient();
-    const { error } = await supabase.from("seller_applications").insert({
+    const { success } = await submitApplication({
       name: `${fname} ${lname}`.trim(),
       email: data.get("email") as string,
       phone: (data.get("phone") as string) || "",
@@ -48,13 +47,7 @@ export default function ApplyPage() {
       referral_source: (data.get("referral_source") as string) || null,
     });
 
-    if (error) {
-      console.error("Application submission error:", error);
-      setStatus("error");
-      return;
-    }
-
-    setStatus("success");
+    setStatus(success ? "success" : "error");
   }
 
   if (status === "error") {

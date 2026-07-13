@@ -3,6 +3,7 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
 import { Resend } from "resend";
+import { EMAIL_FROM } from "@/lib/email";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -73,7 +74,7 @@ export async function approveApplication(id: string) {
   // Send approval email
   const firstName = app.name.split(" ")[0];
   await resend.emails.send({
-    from: "Village Market <onboarding@resend.dev>",
+    from: EMAIL_FROM,
     to: app.email,
     subject: "You've been approved — welcome to Village Market",
     html: `
@@ -119,7 +120,7 @@ export async function resendSellerInvite(sellerId: string) {
 
   const firstName = seller.name.split(" ")[0];
   const { data: emailData, error: emailError } = await resend.emails.send({
-    from: "Village Market <onboarding@resend.dev>",
+    from: EMAIL_FROM,
     to: seller.contact_email,
     subject: "Your Village Market seller account",
     html: `
@@ -194,7 +195,7 @@ export async function rejectApplication(id: string) {
   if (app) {
     const firstName = app.name.split(" ")[0];
     await resend.emails.send({
-      from: "Village Market <onboarding@resend.dev>",
+      from: EMAIL_FROM,
       to: app.email,
       subject: "Your Village Market application",
       html: `

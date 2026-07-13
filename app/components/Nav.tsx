@@ -77,8 +77,8 @@ export default function Nav() {
             </Link>
             <BagIcon count={count} />
             {status !== "checking" && (
-              <span className="flex items-center gap-1.5 text-[11px] text-linen/40" style={{ fontFamily: "var(--font-mono)" }}>
-                <span className={`w-1.5 h-1.5 rounded-full ${isLocal ? "bg-gold" : "bg-flame"}`} />
+              <span className={`flex items-center gap-1.5 text-[11px] ${isLocal ? "text-emerald-400/90" : "text-linen/40"}`} style={{ fontFamily: "var(--font-mono)" }}>
+                <span className={`w-1.5 h-1.5 rounded-full ${isLocal ? "bg-emerald-400" : "bg-flame"}`} />
                 {isLocal ? "LOCAL" : "BROWSING"}
               </span>
             )}

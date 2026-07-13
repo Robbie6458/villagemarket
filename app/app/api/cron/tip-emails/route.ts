@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { Resend } from "resend";
+import { EMAIL_FROM } from "@/lib/email";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -40,7 +41,7 @@ export async function POST(request: NextRequest) {
   for (const contact of contacts) {
     try {
       await resend.emails.send({
-        from: "Village Market <onboarding@resend.dev>",
+        from: EMAIL_FROM,
         to: contact.buyer_email,
         subject: `Did it work out with ${contact.seller_name}?`,
         html: `
