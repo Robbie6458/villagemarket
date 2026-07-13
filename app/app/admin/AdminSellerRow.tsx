@@ -49,7 +49,7 @@ export default function AdminSellerRow({ seller, stats }: { seller: Seller; stat
   }
 
   return (
-    <div className="py-3 flex items-start justify-between gap-3">
+    <div className="py-3 flex flex-col gap-2.5 sm:flex-row sm:items-start sm:justify-between sm:gap-3">
       <div className="flex-1 min-w-0">
         <div className="flex flex-wrap items-center gap-2 mb-0.5">
           <span className="font-medium text-bark text-sm">{seller.name}</span>
@@ -99,7 +99,7 @@ export default function AdminSellerRow({ seller, stats }: { seller: Seller; stat
           </div>
         )}
       </div>
-      <div className="flex items-center gap-3 shrink-0 flex-wrap justify-end">
+      <div className="flex items-center gap-x-4 gap-y-1.5 flex-wrap sm:shrink-0 sm:justify-end border-t border-fence pt-2.5 sm:border-0 sm:pt-0">
         {seller.is_active && (
           <a href={`/sellers/${seller.slug}`} target="_blank" className="text-xs text-flamelo hover:underline">
             View

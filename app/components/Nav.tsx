@@ -86,6 +86,13 @@ export default function Nav() {
 
           {/* Mobile: bag always visible + hamburger */}
           <div className="flex items-center gap-1 md:hidden">
+            {status !== "checking" && (
+              <span
+                className={`w-2 h-2 rounded-full mr-1 shrink-0 ${isLocal ? "bg-emerald-400" : "bg-flame"}`}
+                aria-label={isLocal ? "Browsing locally" : "Browsing from outside the area"}
+                title={isLocal ? "Local access" : "Browse only"}
+              />
+            )}
             <BagIcon count={count} className="p-2" />
             <button className="text-linen p-2" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -110,6 +117,12 @@ export default function Nav() {
           <Link href="/apply" className="border border-gold/50 text-gold text-sm font-medium px-4 py-2 rounded-full text-center" onClick={() => setMenuOpen(false)}>
             Apply to Sell
           </Link>
+          {status !== "checking" && (
+            <span className={`flex items-center gap-2 text-xs pt-1 ${isLocal ? "text-emerald-400/90" : "text-linen/40"}`} style={{ fontFamily: "var(--font-mono)" }}>
+              <span className={`w-1.5 h-1.5 rounded-full ${isLocal ? "bg-emerald-400" : "bg-flame"}`} />
+              {isLocal ? "LOCAL ACCESS" : "BROWSE ONLY — VISIT NORTH IDAHO TO UNLOCK"}
+            </span>
+          )}
         </div>
       )}
     </header>
