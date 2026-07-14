@@ -43,9 +43,23 @@ export default function Footer() {
               Village Market is independently run, ad-free, and algorithm-free.
               If you&apos;d like to help keep it that way:
             </p>
-            <button className="border border-gold/40 hover:bg-gold hover:text-ember text-gold text-sm px-4 py-2 rounded-full transition-colors">
-              Tip the Village ♡
-            </button>
+            {process.env.NEXT_PUBLIC_STRIPE_TIP_LINK ? (
+              <a
+                href={process.env.NEXT_PUBLIC_STRIPE_TIP_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block border border-gold/40 hover:bg-gold hover:text-ember text-gold text-sm px-4 py-2 rounded-full transition-colors"
+              >
+                Tip the Village ♡
+              </a>
+            ) : (
+              <Link
+                href="/how-it-works"
+                className="inline-block border border-gold/40 hover:bg-gold hover:text-ember text-gold text-sm px-4 py-2 rounded-full transition-colors"
+              >
+                Tip the Village ♡
+              </Link>
+            )}
           </div>
         </div>
 
