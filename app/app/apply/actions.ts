@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { Resend } from "resend";
 import { EMAIL_FROM } from "@/lib/email";
+import { brandedEmail, emailButton } from "@/lib/email-template";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -41,13 +42,13 @@ export async function submitApplication(
       from: EMAIL_FROM,
       to: input.email,
       subject: "We got your application — Village Market",
-      html: `
-        <p>Hi ${firstName},</p>
+      html: brandedEmail(`
+        <p style="margin-top:0;">Hi ${firstName},</p>
         <p>Thanks for applying to sell on Village Market. Your application is in — and a real person (not an algorithm) is going to read it.</p>
         <p>Every maker on Village Market is personally reviewed, so give us a few days. If it's a good fit, you'll get an email with a link to set up your storefront.</p>
         <p>In the meantime, no need to do anything. We'll be in touch soon.</p>
-        <p>— The Village Market team<br><span style="color:#999;font-size:12px;">Coeur d'Alene, North Idaho</span></p>
-      `,
+        <p style="margin-bottom:0;">— The Village Market team</p>
+      `),
     });
     if (e1) console.error("Applicant confirmation email failed:", JSON.stringify(e1));
   } catch (e) {
@@ -62,8 +63,8 @@ export async function submitApplication(
         to: process.env.ADMIN_EMAIL,
         replyTo: input.email,
         subject: `New maker application: ${input.name}`,
-        html: `
-          <p><strong>${input.name}</strong> just applied to sell on Village Market.</p>
+        html: brandedEmail(`
+          <p style="margin-top:0;"><strong>${input.name}</strong> just applied to sell on Village Market.</p>
           <ul>
             <li><strong>Location:</strong> ${input.location}</li>
             <li><strong>Makes:</strong> ${input.categories.join(", ") || "—"}</li>
@@ -72,8 +73,8 @@ export async function submitApplication(
             ${input.social_links ? `<li><strong>Links:</strong> ${input.social_links}</li>` : ""}
           </ul>
           <p><strong>What they make:</strong><br>${input.description}</p>
-          ${appUrl ? `<p><a href="${appUrl}/admin">Review it in the admin dashboard →</a></p>` : ""}
-        `,
+          ${appUrl ? emailButton("Review in the admin dashboard", `${appUrl}/admin`) : ""}
+        `),
       });
       if (e2) console.error("Admin notification email failed:", JSON.stringify(e2));
     }

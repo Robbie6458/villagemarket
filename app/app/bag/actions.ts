@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { subscribeToMailerLite } from "@/lib/mailerlite";
 import { Resend } from "resend";
 import { EMAIL_FROM } from "@/lib/email";
+import { brandedEmail } from "@/lib/email-template";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -61,17 +62,16 @@ export async function submitOrderRequests(
       )
       .join("");
 
-    const html = `
-      <p>Hi ${seller.name},</p>
+    const html = brandedEmail(`
+      <p style="margin-top:0;">Hi ${seller.name},</p>
       <p><strong>${buyerName}</strong> would like to purchase the following from your Village Market storefront:</p>
       <ul>${itemsHtml}</ul>
       <p><strong>Total: $${total.toLocaleString()}</strong></p>
       ${group.paymentMethod ? `<p><strong>Preferred payment:</strong> ${group.paymentMethod}</p>` : ""}
       ${vcProperty ? `<p><strong>Staying at:</strong> ${vcProperty} (Village Collective guest)</p>` : ""}
       ${group.note ? `<p><strong>Note from ${buyerName}:</strong> ${group.note}</p>` : ""}
-      <p>Reply directly to this email (${buyerEmail}) to arrange pickup or delivery and finalize payment.</p>
-      <p style="margin-top:16px;color:#888;font-size:12px;">Sent via Village Market · market.village-collective.com</p>
-    `;
+      <p style="margin-bottom:0;">Reply directly to this email (${buyerEmail}) to arrange pickup or delivery and finalize payment.</p>
+    `);
 
     try {
       const { error } = await resend.emails.send({

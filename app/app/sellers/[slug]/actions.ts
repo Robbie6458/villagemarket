@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { Resend } from "resend";
 import { EMAIL_FROM } from "@/lib/email";
+import { brandedEmail } from "@/lib/email-template";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -33,22 +34,20 @@ export async function sendContactEmail(
     : `Message from ${data.fromName} via Village Market`;
 
   const html = data.isCustomOrder
-    ? `
-      <p>Hi ${seller.name},</p>
+    ? brandedEmail(`
+      <p style="margin-top:0;">Hi ${seller.name},</p>
       <p>You have a new custom order request from <strong>${data.fromName}</strong> via Village Market.</p>
       <p><strong>What they'd like made:</strong><br>${data.request}</p>
       ${data.timeline ? `<p><strong>Timeline:</strong> ${data.timeline}</p>` : ""}
       ${data.budget ? `<p><strong>Budget:</strong> ${data.budget}</p>` : ""}
-      <p>Reply directly to this email to follow up with them.</p>
-      <p style="margin-top:16px;color:#888;font-size:12px;">Sent via Village Market · market.village-collective.com</p>
-    `
-    : `
-      <p>Hi ${seller.name},</p>
+      <p style="margin-bottom:0;">Reply directly to this email to follow up with them.</p>
+    `)
+    : brandedEmail(`
+      <p style="margin-top:0;">Hi ${seller.name},</p>
       <p>You have a new message from <strong>${data.fromName}</strong> via Village Market.</p>
-      <blockquote style="border-left:3px solid #ccc;margin:12px 0;padding:8px 16px;color:#555;">${data.message}</blockquote>
-      <p>Reply directly to this email to respond.</p>
-      <p style="margin-top:16px;color:#888;font-size:12px;">Sent via Village Market · market.village-collective.com</p>
-    `;
+      <blockquote style="border-left:3px solid #E8A020;margin:12px 0;padding:8px 16px;color:#555;">${data.message}</blockquote>
+      <p style="margin-bottom:0;">Reply directly to this email to respond.</p>
+    `);
 
   const { error } = await resend.emails.send({
     from: EMAIL_FROM,

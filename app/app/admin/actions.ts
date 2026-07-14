@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
 import { Resend } from "resend";
 import { EMAIL_FROM } from "@/lib/email";
+import { brandedEmail, emailButton } from "@/lib/email-template";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -120,15 +121,14 @@ export async function approveApplication(id: string) {
     from: EMAIL_FROM,
     to: app.email,
     subject: "You've been approved — welcome to Village Market",
-    html: `
-      <p>Hi ${firstName},</p>
+    html: brandedEmail(`
+      <p style="margin-top:0;">Hi ${firstName},</p>
       <p>Great news — your application to sell on Village Market has been approved.</p>
-      <p>Click the link below to set your password and access your seller dashboard, where you can set up your storefront, add products, and go live.</p>
-      <p><a href="${actionLink}">Set up your account →</a></p>
-      <p>This link expires in 24 hours. If you need a new one, just reply to this email.</p>
-      <p>Welcome to the market.</p>
-      <p>— The Village Market team</p>
-    `,
+      <p>Click the button below to open your seller dashboard, where you can set up your storefront, add products, and go live. No password to create — the link signs you in.</p>
+      ${emailButton("Set up your storefront", actionLink)}
+      <p>This link expires in 24 hours. To sign in again later, just go to the sign-in page and request a one-time email link — no password needed.</p>
+      <p style="margin-bottom:0;">Welcome to the market.<br>— The Village Market team</p>
+    `),
   });
 
   revalidatePath("/admin");
@@ -166,13 +166,12 @@ export async function resendSellerInvite(sellerId: string) {
     from: EMAIL_FROM,
     to: seller.contact_email,
     subject: "Your Village Market seller account",
-    html: `
-      <p>Hi ${firstName},</p>
-      <p>Here's your link to set up your Village Market seller account and access your dashboard.</p>
-      <p><a href="${linkData.properties.action_link}">Set up your account →</a></p>
-      <p>This link expires in 24 hours.</p>
-      <p>— The Village Market team</p>
-    `,
+    html: brandedEmail(`
+      <p style="margin-top:0;">Hi ${firstName},</p>
+      <p>Here's your link to open your Village Market seller dashboard. No password needed — the link signs you in.</p>
+      ${emailButton("Open your dashboard", linkData.properties.action_link)}
+      <p style="margin-bottom:0;">This link expires in 24 hours. To sign in again later, request a one-time email link from the sign-in page.</p>
+    `),
   });
 
   if (emailError) throw new Error(`Resend error: ${JSON.stringify(emailError)}`);
@@ -241,13 +240,13 @@ export async function rejectApplication(id: string) {
       from: EMAIL_FROM,
       to: app.email,
       subject: "Your Village Market application",
-      html: `
-        <p>Hi ${firstName},</p>
+      html: brandedEmail(`
+        <p style="margin-top:0;">Hi ${firstName},</p>
         <p>Thank you for applying to Village Market. After reviewing your application, we're not able to move forward at this time.</p>
         <p>Village Market is a small, curated community — we're selective by design, and this isn't a reflection of the quality of your work.</p>
         <p>You're welcome to apply again in the future.</p>
-        <p>— The Village Market team</p>
-      `,
+        <p style="margin-bottom:0;">— The Village Market team</p>
+      `),
     });
   }
 

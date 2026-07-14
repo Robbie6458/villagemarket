@@ -10,7 +10,7 @@ function SellerLoginForm() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [mode, setMode] = useState<"password" | "magic">("password");
+  const [mode, setMode] = useState<"password" | "magic">("magic");
   const [magicSent, setMagicSent] = useState(false);
 
   useEffect(() => {
@@ -93,17 +93,8 @@ function SellerLoginForm() {
         <p className="text-bark/50 text-sm">Access your Village Market storefront</p>
       </div>
 
-      {/* Mode toggle */}
+      {/* Mode toggle — passwordless email link is the primary method */}
       <div className="flex bg-lamp rounded-xl p-1 mb-5 gap-1">
-        <button
-          type="button"
-          onClick={() => { setMode("password"); setError(""); }}
-          className={`flex-1 text-xs font-medium py-1.5 rounded-lg transition-colors ${
-            mode === "password" ? "bg-linen text-bark shadow-sm" : "text-bark/50 hover:text-bark"
-          }`}
-        >
-          Password
-        </button>
         <button
           type="button"
           onClick={() => { setMode("magic"); setError(""); }}
@@ -112,6 +103,15 @@ function SellerLoginForm() {
           }`}
         >
           Email link
+        </button>
+        <button
+          type="button"
+          onClick={() => { setMode("password"); setError(""); }}
+          className={`flex-1 text-xs font-medium py-1.5 rounded-lg transition-colors ${
+            mode === "password" ? "bg-linen text-bark shadow-sm" : "text-bark/50 hover:text-bark"
+          }`}
+        >
+          Password
         </button>
       </div>
 

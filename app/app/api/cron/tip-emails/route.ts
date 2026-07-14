@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { Resend } from "resend";
 import { EMAIL_FROM } from "@/lib/email";
+import { brandedEmail, emailButton } from "@/lib/email-template";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -44,15 +45,15 @@ export async function POST(request: NextRequest) {
         from: EMAIL_FROM,
         to: contact.buyer_email,
         subject: `Did it work out with ${contact.seller_name}?`,
-        html: `
-          <p>Hi ${contact.buyer_name},</p>
+        html: brandedEmail(`
+          <p style="margin-top:0;">Hi ${contact.buyer_name},</p>
           <p>You reached out to <strong>${contact.seller_name}</strong> on Village Market a couple days ago.</p>
           <p>If your conversation led somewhere — a sale, a trade, a new local connection — we'd love to know. And if you'd like to tip the Village for the introduction, it goes directly to keeping this marketplace free, local, and ad-free.</p>
-          ${tipLink ? `<p><a href="${tipLink}" style="background:#3D5A3E;color:#F5F0E8;padding:10px 20px;border-radius:99px;text-decoration:none;font-size:14px;display:inline-block;">Tip the Village ♡</a></p>` : ""}
+          ${tipLink ? emailButton("Tip the Village ♡", tipLink) : ""}
           <p>Either way, we hope you found what you were looking for.</p>
-          <p>— Village Market<br><span style="color:#999;font-size:12px;">Coeur d'Alene, North Idaho</span></p>
+          <p>— Village Market</p>
           <p style="margin-top:24px;color:#aaa;font-size:11px;">You're receiving this because you sent a message through Village Market. We won't email you again about this.</p>
-        `,
+        `),
       });
 
       await admin

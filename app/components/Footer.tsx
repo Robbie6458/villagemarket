@@ -28,6 +28,7 @@ export default function Footer() {
           <div className="flex flex-col gap-3">
             <p className="text-[11px] font-medium tracking-[0.2em] uppercase text-gold" style={{ fontFamily: "var(--font-mono)" }}>Navigate</p>
             <Link href="/" className="text-sm text-linen/70 hover:text-gold transition-colors">Browse Makers</Link>
+            <Link href="/how-it-works" className="text-sm text-linen/70 hover:text-gold transition-colors">How It Works</Link>
             <Link href="/apply" className="text-sm text-linen/70 hover:text-gold transition-colors">Apply to Sell</Link>
             <Link href="/for-guests" className="text-sm text-linen/70 hover:text-gold transition-colors">For VC Guests</Link>
             <Link href="/barter" className="text-sm text-linen/70 hover:text-gold transition-colors">Barter Board</Link>
@@ -50,12 +51,16 @@ export default function Footer() {
 
         <div className="border-t border-ash/60 mt-12 pt-6 flex flex-col sm:flex-row justify-between gap-4 text-xs text-linen/35" style={{ fontFamily: "var(--font-mono)" }}>
           <p>© {new Date().getFullYear()} Village Market · Coeur d&apos;Alene, Idaho</p>
-          <p>
-            Powered by{" "}
-            <a href="https://village-collective.com" target="_blank" rel="noopener noreferrer" className="hover:text-gold transition-colors">
-              Village Collective
-            </a>
-          </p>
+          <div className="flex items-center gap-4">
+            <Link href="/privacy" className="hover:text-gold transition-colors">Privacy</Link>
+            <Link href="/terms" className="hover:text-gold transition-colors">Terms</Link>
+            <span>
+              Powered by{" "}
+              <a href="https://village-collective.com" target="_blank" rel="noopener noreferrer" className="hover:text-gold transition-colors">
+                Village Collective
+              </a>
+            </span>
+          </div>
         </div>
       </div>
     </footer>

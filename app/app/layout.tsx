@@ -5,6 +5,7 @@ import { GeoProvider } from "@/lib/geo-context";
 import { BagProvider } from "@/lib/bag-context";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import IntroPopup from "@/components/IntroPopup";
 
 // Fraunces — the craft/story voice. Optical sizing + soft axis give it warmth
 // a default Playfair never has.
@@ -56,6 +57,7 @@ export default function RootLayout({
             <Nav />
             <main className="flex-1">{children}</main>
             <Footer />
+            <IntroPopup />
           </BagProvider>
         </GeoProvider>
       </body>
