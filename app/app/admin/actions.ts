@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { Resend } from "resend";
 import { EMAIL_FROM } from "@/lib/email";
 import { brandedEmail, emailButton } from "@/lib/email-template";
+import { sendOnboardingPaidEmail } from "@/lib/onboarding-email";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -182,11 +183,27 @@ export async function resendSellerInvite(sellerId: string) {
 
 export async function toggleOnboardingPaid(sellerId: string, paid: boolean) {
   const admin = createAdminClient();
+
+  // Grab the prior state + contact so we can notify on the first transition.
+  const { data: before } = await admin
+    .from("sellers")
+    .select("onboarding_paid, contact_email, name")
+    .eq("id", sellerId)
+    .single();
+
   const { error } = await admin
     .from("sellers")
     .update({ onboarding_paid: paid })
     .eq("id", sellerId);
   if (error) throw new Error(error.message);
+
+  // Only email on a genuine false -> true change, never on toggling back off.
+  if (paid && before && !before.onboarding_paid && before.contact_email) {
+    await sendOnboardingPaidEmail(before.contact_email, before.name).catch((e) =>
+      console.error("Onboarding-paid email failed:", e)
+    );
+  }
+
   revalidatePath("/admin");
 }
 

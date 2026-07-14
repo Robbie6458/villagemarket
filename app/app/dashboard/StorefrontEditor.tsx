@@ -224,6 +224,23 @@ export default function StorefrontEditor({ seller }: { seller: Seller }) {
         />
       )}
 
+      {/* Persistent confirmation once the setup fee is settled */}
+      {seller.onboarding_paid && (
+        <div className="bg-gold/10 border border-gold/30 rounded-2xl p-4 flex items-start gap-3">
+          <span className="shrink-0 w-6 h-6 rounded-full bg-gold text-ember text-sm font-bold flex items-center justify-center mt-0.5">
+            ✓
+          </span>
+          <div>
+            <p className="text-sm font-medium text-bark">Setup fee received</p>
+            <p className="text-bark/55 text-xs leading-relaxed">
+              {seller.is_active
+                ? "Your account is fully set up — thanks for being part of the market."
+                : "Your account is unlocked. Add your details and a product, then go live whenever you're ready."}
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Onboarding fee gate */}
       {!seller.onboarding_paid && (
         <div className="bg-flame/10 border border-flame/30 rounded-2xl p-5">

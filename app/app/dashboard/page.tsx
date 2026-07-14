@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import StorefrontEditor from "./StorefrontEditor";
 import ProductManager from "./ProductManager";
+import AccountSettings from "./AccountSettings";
 import SignOutButtonClient from "./SignOutButtonClient";
 
 export default async function DashboardPage() {
@@ -71,6 +72,11 @@ export default async function DashboardPage() {
             >
               {seller.name}
             </h1>
+            {seller.onboarding_paid && (
+              <span className="inline-flex items-center gap-1 mt-2 text-[11px] font-medium text-gold bg-gold/10 border border-gold/25 px-2.5 py-0.5 rounded-full">
+                ✓ Setup fee paid
+              </span>
+            )}
           </div>
           <SignOutButtonClient />
         </div>
@@ -79,6 +85,10 @@ export default async function DashboardPage() {
 
         <div className="mt-6">
           <ProductManager products={products ?? []} sellerId={seller.id} />
+        </div>
+
+        <div className="mt-6">
+          <AccountSettings email={user.email ?? ""} />
         </div>
       </div>
     </div>
