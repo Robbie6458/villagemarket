@@ -48,6 +48,20 @@ export async function updateStorefront(data: {
   revalidatePath("/dashboard");
 }
 
+export async function updateSellerPhoto(which: "cover" | "profile", url: string) {
+  const sellerId = await getCurrentSellerId();
+  const supabase = await createClient();
+
+  const column = which === "cover" ? "cover_photo_url" : "profile_photo_url";
+  const { error } = await supabase
+    .from("sellers")
+    .update({ [column]: url })
+    .eq("id", sellerId);
+
+  if (error) throw new Error(error.message);
+  revalidatePath("/dashboard");
+}
+
 export async function goLive() {
   const sellerId = await getCurrentSellerId();
   const supabase = await createClient();

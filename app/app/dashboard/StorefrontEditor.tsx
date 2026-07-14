@@ -2,9 +2,10 @@
 
 import { useState, useRef, useEffect } from "react";
 import QRCode from "qrcode";
-import { updateStorefront, goLive, goOffline, markOnboardingPaid } from "./actions";
+import { updateStorefront, goLive, goOffline, markOnboardingPaid, updateSellerPhoto } from "./actions";
 import { createClient } from "@/lib/supabase/client";
 import { PAYMENT_METHODS, NEIGHBORHOODS } from "@/lib/types";
+import ImageCropper from "@/components/ImageCropper";
 
 type Seller = {
   id: string;
@@ -57,6 +58,7 @@ export default function StorefrontEditor({ seller }: { seller: Seller }) {
   const [uploadingProfile, setUploadingProfile] = useState(false);
   const [copied, setCopied] = useState(false);
   const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
+  const [cropTarget, setCropTarget] = useState<{ file: File; which: "cover" | "profile" } | null>(null);
 
   const coverInputRef = useRef<HTMLInputElement>(null);
   const profileInputRef = useRef<HTMLInputElement>(null);
@@ -84,27 +86,63 @@ export default function StorefrontEditor({ seller }: { seller: Seller }) {
       prev.includes(method) ? prev.filter((m) => m !== method) : [...prev, method]
     );
 
-  async function uploadImage(
-    file: File,
-    path: string,
-    onUrl: (url: string) => void,
-    setUploading: (v: boolean) => void
-  ) {
+  // Pull the storage object path back out of a public URL so we can tidy up
+  // the previous image after a successful replace. Best-effort only.
+  function storagePathFromUrl(url: string): string | null {
+    const marker = "/seller-images/";
+    const i = url.indexOf(marker);
+    if (i === -1) return null;
+    const path = url.slice(i + marker.length).split("?")[0];
+    return path.startsWith(`${seller.id}/`) ? path : null;
+  }
+
+  async function uploadCropped(blob: Blob, which: "cover" | "profile") {
+    const setUploading = which === "cover" ? setUploadingCover : setUploadingProfile;
+    const onUrl = which === "cover" ? setCoverUrl : setProfileUrl;
+    const previousUrl = which === "cover" ? coverUrl : profileUrl;
+
     setUploading(true);
-    const supabase = createClient();
-    const { error } = await supabase.storage
-      .from("seller-images")
-      .upload(path, file, { upsert: true });
+    try {
+      const supabase = createClient();
+      // Unique filename per upload — a fresh URL guarantees the new image
+      // shows immediately instead of a cached copy at a reused path.
+      const path = `${seller.id}/${which}-${Date.now()}.jpg`;
 
-    if (error) {
-      alert("Upload failed: " + error.message);
+      const { error } = await supabase.storage
+        .from("seller-images")
+        .upload(path, blob, { upsert: true, contentType: "image/jpeg" });
+
+      if (error) {
+        alert("Upload failed: " + error.message);
+        return;
+      }
+
+      const { data } = supabase.storage.from("seller-images").getPublicUrl(path);
+      onUrl(data.publicUrl);
+
+      // Persist right away so the photo sticks without needing a separate Save.
+      try {
+        await updateSellerPhoto(which, data.publicUrl);
+      } catch (e) {
+        alert("Uploaded, but saving it failed: " + (e as Error).message);
+      }
+
+      // Remove the old file so storage doesn't accumulate orphans.
+      const oldPath = previousUrl ? storagePathFromUrl(previousUrl) : null;
+      if (oldPath && oldPath !== path) {
+        await supabase.storage.from("seller-images").remove([oldPath]).catch(() => {});
+      }
+    } finally {
       setUploading(false);
-      return;
+      setCropTarget(null);
     }
+  }
 
-    const { data } = supabase.storage.from("seller-images").getPublicUrl(path);
-    onUrl(data.publicUrl);
-    setUploading(false);
+  function pickFile(e: React.ChangeEvent<HTMLInputElement>, which: "cover" | "profile") {
+    const file = e.target.files?.[0];
+    // Reset so choosing the same file again still re-triggers onChange.
+    e.target.value = "";
+    if (file) setCropTarget({ file, which });
   }
 
   async function handleSave() {
@@ -175,6 +213,17 @@ export default function StorefrontEditor({ seller }: { seller: Seller }) {
 
   return (
     <div className="space-y-6">
+      {cropTarget && (
+        <ImageCropper
+          file={cropTarget.file}
+          aspect={cropTarget.which === "cover" ? 16 / 9 : 1}
+          outputWidth={cropTarget.which === "cover" ? 1280 : 512}
+          title={cropTarget.which === "cover" ? "Crop your cover photo" : "Crop your profile photo"}
+          onCancel={() => setCropTarget(null)}
+          onCropped={(blob) => uploadCropped(blob, cropTarget.which)}
+        />
+      )}
+
       {/* Onboarding fee gate */}
       {!seller.onboarding_paid && (
         <div className="bg-flame/10 border border-flame/30 rounded-2xl p-5">
@@ -317,16 +366,7 @@ export default function StorefrontEditor({ seller }: { seller: Seller }) {
               type="file"
               accept="image/*"
               className="hidden"
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file)
-                  uploadImage(
-                    file,
-                    `${seller.id}/cover`,
-                    setCoverUrl,
-                    setUploadingCover
-                  );
-              }}
+              onChange={(e) => pickFile(e, "cover")}
             />
           </div>
 
@@ -355,16 +395,7 @@ export default function StorefrontEditor({ seller }: { seller: Seller }) {
               type="file"
               accept="image/*"
               className="hidden"
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file)
-                  uploadImage(
-                    file,
-                    `${seller.id}/profile`,
-                    setProfileUrl,
-                    setUploadingProfile
-                  );
-              }}
+              onChange={(e) => pickFile(e, "profile")}
             />
           </div>
         </div>
